@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Inicio{% endblock %}
+
+{% block content %}
+<div class="w-full">
+  <div class="swiper w-full h-screen"> <!-- ocupa 100% de la pantalla -->
+    <div class="swiper-wrapper">
+      <div class="swiper-slide relative">
+        <img src="{% static 'images/7546.jpg' %}" class="w-full h-full object-cover" alt="Masajes">
+        <div
+          class="text-white px-6 py-3 text-3xl font-semibold rounded absolute inset-0 flex items-center justify-center">
+          Bienvenido al SPA Sentirse Bien
+        </div>
+      </div>
+      <div class="swiper-slide relative">
+        <img src="{% static 'images/otherimage.jpg' %}" class="w-full h-full object-cover" alt="Faciales">
+        <div
+          class="bg-black/25 text-white px-6 py-3 text-3xl font-semibold rounded absolute inset-0 flex items-center justify-center">
+          Bienvenidos a Spa Sentirse Bien
+        </div>
+      </div>
+      <div class="swiper-slide relative">
+        <img src="{% static 'images/7546.jpg' %}" class="w-full h-full object-cover" alt="Spa">
+        <div
+          class="text-white px-6 py-3 text-3xl font-semibold rounded absolute inset-0 flex items-center justify-center">
+          Bienvenido al SPA Sentirse Bien
+        </div>
+      </div>
+    </div>
+
+    <div class="swiper-pagination"></div>
+    <div class="swiper-button-prev"></div>
+    <div class="swiper-button-next"></div>
+  </div>
+</div>
+
+
+
+
+{% if user.is_authenticated %}
+<p class="text-gray-700 text-center">Podés reservar tu cita o consultar tus servicios disponibles.</p>
+{% else %}
+<p class="text-gray-700 text-center">Iniciá sesión o registrate para pedir un turno en línea.</p>
+{% endif %}
+{% endblock %}

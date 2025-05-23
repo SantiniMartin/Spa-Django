@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <title>{% block title %}SPA - Sentirse Bien{% endblock %}</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-gray-100 flex items-center justify-center min-h-screen">
+  <main class="w-full max-w-md bg-white p-8 rounded shadow-md">
+    {% block content %}
+    <!-- El contenido de cada formulario irá aquí -->
+    {% endblock %}
+  </main>
+</body>
+
+</html>

@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <title>{% block title %}SPA - Sentirse Bien{% endblock %}</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+</head>
+
+<body class="bg-gray-100 min-h-screen">
+
+  <!-- NAVBAR -->
+  <nav class="bg-white shadow px-6 py-4 flex justify-between items-center">
+    <div class="text-xl font-bold text-purple-700">
+      <a href="/">Spa Sentirse Bien</a>
+    </div>
+    <div>
+      {% if user.is_authenticated %}
+      <span class="mr-4">Hola, {{ user.username }}</span>
+      <a href="{% url 'logout' %}" class="text-red-600 hover:underline">Cerrar sesión</a>
+      {% else %}
+      <a href="{% url 'login' %}" class="text-blue-600 hover:underline mr-4">Iniciar sesión</a>
+      <a href="{% url 'registro' %}" class="text-green-600 hover:underline">Registrarse</a>
+      {% endif %}
+    </div>
+  </nav>
+
+  <!-- CONTENIDO -->
+  <main class="">
+    {% block content %}{% endblock %}
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+
+  <script>
+    const swiper = new Swiper('.swiper', {
+      loop: true,
+      autoplay: {
+        delay: 3000,
+      },
+      pagination: {
+        el: '.swiper-pagination',
+        clickable: true,
+      },
+      navigation: {
+        nextEl: '.swiper-button-next',
+        prevEl: '.swiper-button-prev',
+      },
+    });
+  </script>
+
+</body>
+
+</html>
