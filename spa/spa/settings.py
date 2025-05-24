@@ -56,7 +56,7 @@ ROOT_URLCONF = 'spa.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR, 'spa','polls','templates')],
+        'DIRS': [os.path.join(BASE_DIR, 'spa', 'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [

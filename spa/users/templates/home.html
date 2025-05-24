@@ -5,7 +5,7 @@
 
 {% block content %}
 <div class="w-full">
-  <div class="swiper w-full h-screen"> <!-- ocupa 100% de la pantalla -->
+  <div class="swiper w-full h-screen">
     <div class="swiper-wrapper">
       <div class="swiper-slide relative">
         <img src="{% static 'images/7546.jpg' %}" class="w-full h-full object-cover" alt="Masajes">
@@ -36,6 +36,23 @@
   </div>
 </div>
 
+<div class="w-full flex items-center bg-green-100/100 h-full">
+  <section class="w-1/2 h-1/2">
+    <article>
+      <p class="text-4xl">Tu bienestar <span>Nuestra prioridad</span></p>
+    </article>
+    <p>Experimente la tranquilidad en el sereno ambiente de nuestro spa. Nuestros terapeutas expertos ofrecen
+      tratamientos rejuvenecedores diseñados para restaurar el equilibrio de cuerpo y mente.</p>
+    <article>
+      <button class="rounded-xl shadow-md outline outline-black/5 h-10 w-40">Reservar ahora</button>
+      <button class="rounded-xl shadow-md outline outline-black/5 h-10 w-40">Explorar servicios</button>
+    </article>
+  </section>
+
+  <section class="w-1/2 h-9/10">
+    <img src="{% static '/images/side.jpg' %}" alt="image side spa" class="object-cover">
+  </section>
+</div>
 
 
 

@@ -12,23 +12,24 @@
 
 <body class="bg-gray-100 min-h-screen">
 
-  <!-- NAVBAR -->
   <nav class="bg-white shadow px-6 py-4 flex justify-between items-center">
-    <div class="text-xl font-bold text-purple-700">
+    <div class="text-xl font-bold text-green-700">
       <a href="/">Spa Sentirse Bien</a>
     </div>
     <div>
+      <a href="#" class="text-green-600 hover:underline mr-4">Inicio</a>
+      <a href="#" class="text-green-600 hover:underline mr-4">Servicios</a>
+      <a href="#" class="text-green-600 hover:underline mr-4">Reservar ahora</a>
       {% if user.is_authenticated %}
-      <span class="mr-4">Hola, {{ user.username }}</span>
+      <a href="#" class="text-green-600 hover:underline mr-4">Mis citas</a>
       <a href="{% url 'logout' %}" class="text-red-600 hover:underline">Cerrar sesión</a>
+      <span class="ml-4">Hola, {{ user.username }}</span>
       {% else %}
       <a href="{% url 'login' %}" class="text-blue-600 hover:underline mr-4">Iniciar sesión</a>
-      <a href="{% url 'registro' %}" class="text-green-600 hover:underline">Registrarse</a>
       {% endif %}
     </div>
   </nav>
 
-  <!-- CONTENIDO -->
   <main class="">
     {% block content %}{% endblock %}
   </main>
