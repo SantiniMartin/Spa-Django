@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block title %}Resumen de Compra{% endblock %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-6">
+    <h1 class="text-2xl font-bold mb-4">Resumen de tu pedido</h1>
+    {% if carrito.items.all %}
+    <ul class="space-y-3">
+        {% for item in carrito.items.all %}
+        <li class="bg-white rounded-2xl shadow p-4 flex justify-between">
+            <div>
+                <p class="font-semibold">{{ item.producto.name }}</p>
+                <p class="text-sm text-gray-600">Cantidad: {{ item.cantidad }}</p>
+            </div>
+            <div class="text-right text-blue-600 font-bold">${{ item.total_price }}</div>
+        </li>
+        {% endfor %}
+    </ul>
+    <div class="mt-6 text-right">
+        <p class="text-xl font-bold">Total a pagar: ${{ carrito.total_price }}</p>
+        <form action="{% url 'confirmar_compra' %}" method="POST">
+            {% csrf_token %}
+            <button type="submit" class="bg-green-600 text-white px-6 py-2 rounded mt-4">Finalizar compra</button>
+        </form>
+    </div>
+    {% else %}
+    <p>No tienes productos en el carrito.</p>
+    {% endif %}
+</div>
+{% endblock %}

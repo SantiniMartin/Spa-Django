@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Tienda{% endblock %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-6">
+    <h1 class="text-2xl font-bold mb-4">Lista de Productos</h1>
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+        {% for product in products %}
+        <div class="bg-white rounded-2xl shadow p-4">
+            <h2 class="text-lg font-semibold">{{ product.name }}</h2>
+            <p class="text-sm text-gray-600">{{ product.description }}</p>
+            <p class="text-blue-600 font-bold mt-2">${{ product.price }}</p>
+            <form action="{% url 'agregar_producto' product.id %}" method="POST" class="mt-3">
+                {% csrf_token %}
+                <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded">Agregar al carrito</button>
+            </form>
+            {% if product.image %}
+                <img src="{{ product.image.url }}" alt="{{ product.name }}" class="w-full h-auto mt-2 rounded">
+            {% endif %}
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
+

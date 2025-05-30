@@ -17,7 +17,9 @@
     </div>
     <div>
       <a href="#" class="text-green-600 hover:underline mr-4">Inicio</a>
+      <a href="{% url 'product_list' %}" href="#" class="text-green-600 hover:underline mr-4">Tienda</a>
       <a href="#" class="text-green-600 hover:underline mr-4">Servicios</a>
+      <a href="{% url 'ver_carrito' %}" href="#" class="text-green-600 hover:underline mr-4">Carrito</a>
       <a href="#" class="text-green-600 hover:underline mr-4">Reservar ahora</a>
       {% if user.is_authenticated %}
       <a href="#" class="text-green-600 hover:underline mr-4">Mis citas</a>
@@ -66,6 +68,7 @@
         <h3 class="text-lg font-semibold mb-3">Enlaces rápidos</h3>
         <ul class="space-y-2 text-sm">
           <li><a href="{% url 'home' %}" class="hover:underline">Inicio</a></li>
+          <a href="{% url 'product_list' %}" href="#" class="text-green-600 hover:underline mr-4">Tienda</a>
           <li><a href="#" class="hover:underline">Servicios</a></li>
           <li><a href="#" class="hover:underline">Reservar cita</a></li>
           <li><a href="{% url 'login' %}" class="hover:underline">Iniciar sesión</a></li>

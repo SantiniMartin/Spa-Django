@@ -19,7 +19,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
-# SECURITY WARNING: keep the secret key used in production secret!
+# SECURITY WARNING: keep the secret key used in production secret!NO SE SUBE AÑ GITHUB ESTOO
 SECRET_KEY = 'django-insecure-1r-g*ful0no(%rc8p709p&5hvw*1hqgum635ky$#co!hpx)q2$'
 
 # SECURITY WARNING: don't run with debug turned on in production!
@@ -30,6 +30,7 @@ LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/'
 
 # Application definition
+#python manage.py startapp store
 
 INSTALLED_APPS = [
     'users',
@@ -39,7 +40,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'appointment'
+    'appointment',
+    'store',
+    'cart'
 ]
 
 MIDDLEWARE = [
@@ -50,6 +53,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'cart.middleware.EnsureCartMiddleware',
 ]
 
 ROOT_URLCONF = 'spa.urls'
@@ -122,6 +126,10 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 STATICFILES_DIRS = [BASE_DIR / 'static']
+
+#MEDIAAA ARCHIVOS QUE NO SON STATICSS
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR / 'media'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
