@@ -1,140 +1,213 @@
 <!DOCTYPE html>
 <html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <title>{% block title %}SPA - Sentirse Bien{% endblock %}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"
+    />
+  </head>
 
-<head>
-  <meta charset="UTF-8" />
-  <title>{% block title %}SPA - Sentirse Bien{% endblock %}</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <script src="https://cdn.tailwindcss.com"></script>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
-</head>
+  <body class="bg-gray-100 min-h-screen">
+    <nav class="bg-white shadow px-6 py-4 flex justify-between items-center">
+      <div class="text-xl font-bold text-green-700">
+        <a href="/">Spa Sentirse Bien</a>
+      </div>
+      <div class="flex">
+        <a href="{% url 'home' %}" class="text-green-600 hover:underline mr-4"
+          >Inicio</a
+        >
+        <a
+          href="{% url 'product_list' %}"
+          class="text-green-600 hover:underline mr-4"
+          >Tienda</a
+        >
+        <a
+          href="{% url 'service' %}"
+          class="text-green-600 hover:underline mr-4"
+          >Servicios</a
+        >
+        <a href="#" class="text-green-600 hover:underline mr-4"
+          >Reservar ahora</a
+        >
+        {% if user.is_authenticated %}
+        <a
+          href="{% url 'ver_carrito' %}"
+          href="#"
+          class="text-green-600 hover:underline mr-4"
+          >Carrito</a
+        >
+        <a href="#" class="text-green-600 hover:underline mr-4">Mis citas</a>
+        <form method="POST" action="{% url 'logout' %}">
+          {% csrf_token %}
+          <button type="submit" class="text-red-600 hover:underline">
+            Cerrar sesión
+          </button>
+                
+        </form>
+        <span class="ml-4">Hola, {{ user.username }}</span>
+        {% else %}
+        <a href="{% url 'login' %}" class="text-blue-600 hover:underline mr-4"
+          >Iniciar sesión</a
+        >
+        {% endif %}
+      </div>
+    </nav>
 
-<body class="bg-gray-100 min-h-screen">
-  <nav class="bg-white shadow px-6 py-4 flex justify-between items-center">
-    <div class="text-xl font-bold text-green-700">
-      <a href="/">Spa Sentirse Bien</a>
-    </div>
-    <div>
-      <a href="#" class="text-green-600 hover:underline mr-4">Inicio</a>
-      <a href="{% url 'product_list' %}" href="#" class="text-green-600 hover:underline mr-4">Tienda</a>
-      <a href="#" class="text-green-600 hover:underline mr-4">Servicios</a>
-      <a href="{% url 'ver_carrito' %}" href="#" class="text-green-600 hover:underline mr-4">Carrito</a>
-      <a href="#" class="text-green-600 hover:underline mr-4">Reservar ahora</a>
-      {% if user.is_authenticated %}
-      <a href="#" class="text-green-600 hover:underline mr-4">Mis citas</a>
-      <a href="{% url 'logout' %}" class="text-red-600 hover:underline">Cerrar sesión</a>
-      <span class="ml-4">Hola, {{ user.username }}</span>
-      {% else %}
-      <a href="{% url 'login' %}" class="text-blue-600 hover:underline mr-4">Iniciar sesión</a>
-      {% endif %}
-    </div>
-  </nav>
+    <main class="">{% block content %}{% endblock %}</main>
 
-  <main class="">{% block content %}{% endblock %}</main>
+    <footer class="bg-green-50 text-green-900 pt-16 border-t border-green-100">
+      <div
+        class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 grid grid-cols-1 md:grid-cols-3 gap-8"
+      >
+        <div>
+          <h3 class="text-lg font-semibold mb-3">Spa Sentirse Bien</h3>
+          <p class="text-sm mb-4">
+            En Spa Sentirse Bien, creemos en el poder restaurador de la
+            relajación y el autocuidado. Nuestro dedicado equipo de
+            profesionales se compromete a brindarte la mejor experiencia de spa.
+          </p>
+          <div class="flex space-x-4">
+            <a href="#" aria-label="Facebook" class="hover:text-green-600">
+              <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                <path
+                  d="M22 12a10 10 0 10-11.5 9.95v-7.05H8v-2.9h2.5V9.5c0-2.5 1.5-3.9 3.8-3.9 1.1 0 2.3.2 2.3.2v2.5h-1.3c-1.3 0-1.7.8-1.7 1.6v1.9h2.8l-.4 2.9h-2.4V22A10 10 0 0022 12z"
+                />
+              </svg>
+            </a>
+            <a href="#" aria-label="Instagram" class="hover:text-green-600">
+              <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                <path
+                  d="M7.75 2h8.5A5.75 5.75 0 0122 7.75v8.5A5.75 5.75 0 0116.25 22h-8.5A5.75 5.75 0 012 16.25v-8.5A5.75 5.75 0 017.75 2zm0 1.5A4.25 4.25 0 003.5 7.75v8.5A4.25 4.25 0 007.75 20.5h8.5a4.25 4.25 0 004.25-4.25v-8.5A4.25 4.25 0 0016.25 3.5h-8.5zM12 7a5 5 0 110 10 5 5 0 010-10zm0 1.5a3.5 3.5 0 100 7 3.5 3.5 0 000-7zm5.25-.75a1.25 1.25 0 11-2.5 0 1.25 1.25 0 012.5 0z"
+                />
+              </svg>
+            </a>
+            <a href="#" aria-label="Twitter" class="hover:text-green-600">
+              <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                <path
+                  d="M8 19c7.5 0 11.6-6.2 11.6-11.6v-.5A8.3 8.3 0 0022 4.3a8.1 8.1 0 01-2.4.7A4.2 4.2 0 0021.4 3a8.1 8.1 0 01-2.6 1A4.1 4.1 0 0016 3c-2.3 0-4.1 1.9-4.1 4.2 0 .3 0 .6.1.8A11.7 11.7 0 013 4.2a4.2 4.2 0 001.3 5.6A4 4 0 012.8 9v.1c0 2 1.4 3.7 3.3 4a4.2 4.2 0 01-1.9.1 4.1 4.1 0 003.9 2.9A8.3 8.3 0 012 18.6 11.7 11.7 0 008 20"
+                />
+              </svg>
+            </a>
+          </div>
+        </div>
 
-  <footer class="bg-green-50 text-green-900 pt-16 border-t border-green-100">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div>
+          <h3 class="text-lg font-semibold mb-3">Enlaces rápidos</h3>
+          <ul class="space-y-2 text-sm">
+            <li>
+              <a href="{% url 'home' %}" class="hover:underline">Inicio</a>
+            </li>
+            <a
+              href="{% url 'product_list' %}"
+              href="#"
+              class="text-green-600 hover:underline mr-4"
+              >Tienda</a
+            >
+            <li><a href="#" class="hover:underline">Servicios</a></li>
+            <li><a href="#" class="hover:underline">Reservar cita</a></li>
+            <li>
+              <a href="{% url 'login' %}" class="hover:underline"
+                >Iniciar sesión</a
+              >
+            </li>
+            <li>
+              <a href="{% url 'registro' %}" class="hover:underline"
+                >Registrarse</a
+              >
+            </li>
+          </ul>
+        </div>
 
-      <div>
-        <h3 class="text-lg font-semibold mb-3">Spa Sentirse Bien</h3>
-        <p class="text-sm mb-4">
-          En Spa Sentirse Bien, creemos en el poder restaurador de la relajación y el autocuidado. Nuestro dedicado
-          equipo de profesionales se compromete a brindarte la mejor experiencia de spa.
-        </p>
-        <div class="flex space-x-4">
-          <a href="#" aria-label="Facebook" class="hover:text-green-600">
-            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-              <path
-                d="M22 12a10 10 0 10-11.5 9.95v-7.05H8v-2.9h2.5V9.5c0-2.5 1.5-3.9 3.8-3.9 1.1 0 2.3.2 2.3.2v2.5h-1.3c-1.3 0-1.7.8-1.7 1.6v1.9h2.8l-.4 2.9h-2.4V22A10 10 0 0022 12z" />
-            </svg>
-          </a>
-          <a href="#" aria-label="Instagram" class="hover:text-green-600">
-            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-              <path
-                d="M7.75 2h8.5A5.75 5.75 0 0122 7.75v8.5A5.75 5.75 0 0116.25 22h-8.5A5.75 5.75 0 012 16.25v-8.5A5.75 5.75 0 017.75 2zm0 1.5A4.25 4.25 0 003.5 7.75v8.5A4.25 4.25 0 007.75 20.5h8.5a4.25 4.25 0 004.25-4.25v-8.5A4.25 4.25 0 0016.25 3.5h-8.5zM12 7a5 5 0 110 10 5 5 0 010-10zm0 1.5a3.5 3.5 0 100 7 3.5 3.5 0 000-7zm5.25-.75a1.25 1.25 0 11-2.5 0 1.25 1.25 0 012.5 0z" />
-            </svg>
-          </a>
-          <a href="#" aria-label="Twitter" class="hover:text-green-600">
-            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-              <path
-                d="M8 19c7.5 0 11.6-6.2 11.6-11.6v-.5A8.3 8.3 0 0022 4.3a8.1 8.1 0 01-2.4.7A4.2 4.2 0 0021.4 3a8.1 8.1 0 01-2.6 1A4.1 4.1 0 0016 3c-2.3 0-4.1 1.9-4.1 4.2 0 .3 0 .6.1.8A11.7 11.7 0 013 4.2a4.2 4.2 0 001.3 5.6A4 4 0 012.8 9v.1c0 2 1.4 3.7 3.3 4a4.2 4.2 0 01-1.9.1 4.1 4.1 0 003.9 2.9A8.3 8.3 0 012 18.6 11.7 11.7 0 008 20" />
-            </svg>
-          </a>
+        <div>
+          <h3 class="text-lg font-semibold mb-3">Contactanos</h3>
+          <ul class="space-y-2 text-sm">
+            <li class="flex items-center gap-2">
+              <svg
+                class="w-4 h-4 text-green-600"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M17.657 16.657L13.414 12.414m0 0L9.172 8.172m4.242 4.242L19.07 6.343a8 8 0 10-11.314 11.314l4.95-4.95z"
+                />
+              </svg>
+              Av Siempre Viva, Resistencia Chaco, CP 3500
+            </li>
+            <li class="flex items-center gap-2">
+              <svg
+                class="w-4 h-4 text-green-600"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M3 5a2 2 0 012-2h3.6a1 1 0 01.9.6l1.1 2.5a1 1 0 01-.1 1l-1.7 2.2a11 11 0 005.5 5.5l2.2-1.7a1 1 0 011-.1l2.5 1.1a1 1 0 01.6.9V19a2 2 0 01-2 2H5a2 2 0 01-2-2V5z"
+                />
+              </svg>
+              3624000000
+            </li>
+            <li class="flex items-center gap-2">
+              <svg
+                class="w-4 h-4 text-green-600"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M16 12H8m8 0H8m8 0H8m-2 8h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
+                />
+              </svg>
+              info@spasentirsebien.com
+            </li>
+          </ul>
+          <div class="mt-4 text-sm text-green-800">
+            <p><strong>Horarios</strong></p>
+            <p>Lunes - Viernes: 9AM - 8PM</p>
+            <p>Sábado: 10AM - 6PM</p>
+            <p>Domingo: 10AM - 4PM</p>
+          </div>
         </div>
       </div>
 
-      <div>
-        <h3 class="text-lg font-semibold mb-3">Enlaces rápidos</h3>
-        <ul class="space-y-2 text-sm">
-          <li><a href="{% url 'home' %}" class="hover:underline">Inicio</a></li>
-          <a href="{% url 'product_list' %}" href="#" class="text-green-600 hover:underline mr-4">Tienda</a>
-          <li><a href="#" class="hover:underline">Servicios</a></li>
-          <li><a href="#" class="hover:underline">Reservar cita</a></li>
-          <li><a href="{% url 'login' %}" class="hover:underline">Iniciar sesión</a></li>
-          <li><a href="{% url 'registro' %}" class="hover:underline">Registrarse</a></li>
-        </ul>
+      <div
+        class="border-t border-green-100 text-center py-4 text-xs text-green-700"
+      >
+        © 2025 Spa Sentirse Bien. Todos los derechos reservados.
       </div>
+    </footer>
 
-      <div>
-        <h3 class="text-lg font-semibold mb-3">Contactanos</h3>
-        <ul class="space-y-2 text-sm">
-          <li class="flex items-center gap-2">
-            <svg class="w-4 h-4 text-green-600" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round"
-                d="M17.657 16.657L13.414 12.414m0 0L9.172 8.172m4.242 4.242L19.07 6.343a8 8 0 10-11.314 11.314l4.95-4.95z" />
-            </svg>
-            Av Siempre Viva, Resistencia Chaco, CP 3500
-          </li>
-          <li class="flex items-center gap-2">
-            <svg class="w-4 h-4 text-green-600" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round"
-                d="M3 5a2 2 0 012-2h3.6a1 1 0 01.9.6l1.1 2.5a1 1 0 01-.1 1l-1.7 2.2a11 11 0 005.5 5.5l2.2-1.7a1 1 0 011-.1l2.5 1.1a1 1 0 01.6.9V19a2 2 0 01-2 2H5a2 2 0 01-2-2V5z" />
-            </svg>
-            3624000000
-          </li>
-          <li class="flex items-center gap-2">
-            <svg class="w-4 h-4 text-green-600" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round"
-                d="M16 12H8m8 0H8m8 0H8m-2 8h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-            </svg>
-            info@spasentirsebien.com
-          </li>
-        </ul>
-        <div class="mt-4 text-sm text-green-800">
-          <p><strong>Horarios</strong></p>
-          <p>Lunes - Viernes: 9AM - 8PM</p>
-          <p>Sábado: 10AM - 6PM</p>
-          <p>Domingo: 10AM - 4PM</p>
-        </div>
-      </div>
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
 
-    </div>
-
-    <div class="border-t border-green-100 text-center py-4 text-xs text-green-700">
-      © 2025 Spa Sentirse Bien. Todos los derechos reservados.
-    </div>
-  </footer>
-
-
-  <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
-
-  <script>
-    const swiper = new Swiper(".swiper", {
-      loop: true,
-      autoplay: {
-        delay: 3000,
-      },
-      pagination: {
-        el: ".swiper-pagination",
-        clickable: true,
-      },
-      navigation: {
-        nextEl: ".swiper-button-next",
-        prevEl: ".swiper-button-prev",
-      },
-    });
-  </script>
-</body>
-
+    <script>
+      const swiper = new Swiper(".swiper", {
+        loop: true,
+        autoplay: {
+          delay: 3000,
+        },
+        pagination: {
+          el: ".swiper-pagination",
+          clickable: true,
+        },
+        navigation: {
+          nextEl: ".swiper-button-next",
+          prevEl: ".swiper-button-prev",
+        },
+      });
+    </script>
+  </body>
 </html>

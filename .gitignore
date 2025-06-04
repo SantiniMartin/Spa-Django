@@ -1,5 +1,4 @@
 SpaDjango-env/
-requirements.txt
 *.pyc
 db.sqlite3
 *.log
@@ -7,3 +6,4 @@ db.sqlite3
 *.pyd
 __pycache__/
 *.env
+SpaEntorno_mds/
