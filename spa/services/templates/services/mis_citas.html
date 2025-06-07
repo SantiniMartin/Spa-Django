@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block title %}Mis Citas{% endblock %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-6">
+    <h1 class="text-2xl font-bold mb-4">Mis Citas</h1>
+    {% if citas %}
+    <ul class="space-y-3">
+        {% for cita in citas %}
+        <li class="bg-white rounded-2xl shadow p-4">
+            <p><strong>Servicio:</strong> {{ cita.service.name }}</p>
+            <p><strong>Profesional:</strong> {{ cita.service.professional.name }}</p>
+            <p><strong>Fecha:</strong> {{ cita.date }}</p>
+            <p><strong>Hora:</strong> {{ cita.time|time:"H:i" }}</p>
+        </li>
+        {% endfor %}
+    </ul>
+    {% else %}
+    <p>No tienes citas programadas.</p>
+    {% endif %}
+</div>
+{% endblock %}

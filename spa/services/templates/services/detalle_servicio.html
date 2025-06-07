@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Reservar turno - {{ servicio.name }}{% endblock %}
+
+{% block content %}
+<div class="bg-green-50 min-h-screen py-10">
+    <div class="max-w-xl mx-auto bg-white rounded-2xl shadow p-8">
+        <h1 class="text-3xl font-bold text-center text-green-800 mb-2">Reserve su cita</h1>
+        <p class="text-center text-gray-600 mb-6">Seleccione la fecha y el horario que más le convenga.</p>
+
+        <h2 class="text-xl font-semibold mb-2">Servicio seleccionado</h2>
+        <div class="border border-green-500 rounded-xl p-4 mb-6">
+            <div class="flex justify-between items-center">
+                <span class="text-green-800 font-semibold">{{ servicio.name }}</span>
+                <span class="text-green-700 font-bold">${{ servicio.duration_minutes }}</span>
+            </div>
+            <p class="text-sm text-gray-600">{{ servicio.duration_minutes }} min</p>
+        </div>
+
+        <form method="POST" action="{% url 'reservar_turno' servicio.id %}">
+            {% csrf_token %}
+
+            <!-- Seleccionar una fecha -->
+            <label for="fecha" class="block font-semibold text-gray-700 mb-2">Seleccione una fecha</label>
+            <input required type="date" name="date" id="fecha"
+                class="w-full border rounded-xl px-4 py-2 mb-6"
+                min="{{ fecha_min|date:'Y-m-d' }}"
+                value="{{ request.GET.fecha|default_if_none:'' }}">
+
+
+            <!-- Seleccionar un horario -->
+            <label class="block font-semibold text-gray-700 mb-2">Seleccione un horario</label>
+            <div class="grid grid-cols-3 sm:grid-cols-4 gap-3 mb-6">
+                {% for hora in horas_disponibles %}
+                <label class="text-center">
+                    <input type="radio" name="time" value="{{ hora|time:'H:i' }}" class="hidden peer" required>
+                    <div class="peer-checked:bg-green-600 peer-checked:text-white px-4 py-2 border rounded-xl cursor-pointer hover:bg-green-100">
+                        {{ hora|time:'h:i A' }}
+                    </div>
+                </label>
+                {% empty %}
+                <p class="text-red-600 col-span-full">No hay horarios disponibles para esta fecha.</p>
+                {% endfor %}
+            </div>
+
+            <button type="submit" class="w-full bg-green-600 hover:bg-green-700 text-white py-3 rounded-xl font-semibold">
+                Confirmar reserva
+            </button>
+
+        </form>
+    </div>
+</div>
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    const fechaInput = document.getElementById("fecha");
+    if (fechaInput) {
+        fechaInput.addEventListener("change", function() {
+            const fecha = this.value;
+            if (fecha) {
+                const nuevaUrl = new URL(window.location.href);
+                nuevaUrl.searchParams.set("fecha", fecha);
+                window.location.href = nuevaUrl.toString();
+            }
+        });
+    }
+});
+</script>
+
+{% endblock %}

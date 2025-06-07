@@ -7,10 +7,10 @@ from django.conf.urls.static import static
 urlpatterns = [
     path("admin/", admin.site.urls),
     path('', include('users.urls')),
-    path('', include('appointment.urls')),
     path('', home, name='home'),
     path('store/', include('store.urls')),  # store
     path('cart/', include('cart.urls')), # carrito
+    path('servicios/', include('services.urls')), #servicois
 
 ]
 

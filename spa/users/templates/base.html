@@ -15,15 +15,17 @@
     <div class="text-xl font-bold text-green-700">
       <a href="/">Spa Sentirse Bien</a>
     </div>
-    <div>
+    <div class="flex">
       <a href="#" class="text-green-600 hover:underline mr-4">Inicio</a>
-      <a href="{% url 'product_list' %}" href="#" class="text-green-600 hover:underline mr-4">Tienda</a>
-      <a href="#" class="text-green-600 hover:underline mr-4">Servicios</a>
-      <a href="{% url 'ver_carrito' %}" href="#" class="text-green-600 hover:underline mr-4">Carrito</a>
-      <a href="#" class="text-green-600 hover:underline mr-4">Reservar ahora</a>
+      <a href="{% url 'product_list' %}"  class="text-green-600 hover:underline mr-4">Tienda</a>
+      <a href="{% url 'lista_servicios' %}" class="text-green-600 hover:underline mr-4">Servicios</a>
       {% if user.is_authenticated %}
-      <a href="#" class="text-green-600 hover:underline mr-4">Mis citas</a>
-      <a href="{% url 'logout' %}" class="text-red-600 hover:underline">Cerrar sesión</a>
+      <a href="{% url 'ver_carrito' %}"  class="text-green-600 hover:underline mr-4">Carrito</a>
+      <a href="{% url 'mis_citas' %}" class="text-green-600 hover:underline mr-4">Mis citas</a>
+      <form method="POST" action="{% url 'logout' %}">
+        {% csrf_token %}
+        <button type="submit" class="text-red-600 hover:underline">Cerrar sesión</button>
+      </form>
       <span class="ml-4">Hola, {{ user.username }}</span>
       {% else %}
       <a href="{% url 'login' %}" class="text-blue-600 hover:underline mr-4">Iniciar sesión</a>
@@ -68,7 +70,7 @@
         <h3 class="text-lg font-semibold mb-3">Enlaces rápidos</h3>
         <ul class="space-y-2 text-sm">
           <li><a href="{% url 'home' %}" class="hover:underline">Inicio</a></li>
-          <a href="{% url 'product_list' %}" href="#" class="text-green-600 hover:underline mr-4">Tienda</a>
+          <li><a href="{% url 'product_list' %}" class="hover:underline">Tienda</a></li>
           <li><a href="#" class="hover:underline">Servicios</a></li>
           <li><a href="#" class="hover:underline">Reservar cita</a></li>
           <li><a href="{% url 'login' %}" class="hover:underline">Iniciar sesión</a></li>
