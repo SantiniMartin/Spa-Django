@@ -9,7 +9,7 @@ def lista_servicios(request):
     servicios = Service.objects.all()
     return render(request, 'services/lista_servicios.html', {'servicios': servicios})
 
-@login_required
+#@login_required
 def detalle_servicio(request, service_id):
     servicio = get_object_or_404(Service, id=service_id)
     fecha_min = now().date() + timedelta(days=1)
@@ -53,43 +53,45 @@ def detalle_servicio(request, service_id):
 
 @login_required
 def reservar_turno(request, service_id):
-    if request.method == 'POST':
-        servicio = get_object_or_404(Service, id=service_id)
-        fecha_str = request.POST.get('date')
-        hora_str = request.POST.get('time')
+        if not request.user.is_authenticated:
+            return redirect('login')
+        if request.method == 'POST':
+            servicio = get_object_or_404(Service, id=service_id)
+            fecha_str = request.POST.get('date')
+            hora_str = request.POST.get('time')
 
-        try:
-            fecha = datetime.strptime(fecha_str, "%Y-%m-%d").date()
-            hora = datetime.strptime(hora_str, "%H:%M").time()
-        except (ValueError, TypeError):
-            return redirect('detalle_servicio', service_id=service_id)
-
-        if fecha <= now().date():
-            return redirect('detalle_servicio', service_id=service_id)
-
-        dia_semana = fecha.weekday()
-        horarios = Schedule.objects.filter(service=servicio, day_of_week=dia_semana)
-        dentro_del_horario = any(h.start_time <= hora < h.end_time for h in horarios)
-        if not dentro_del_horario:
-            return redirect('detalle_servicio', service_id=service_id)
-
-        if servicio.max_people:
-            cantidad = Appointment.objects.filter(service=servicio, date=fecha, time=hora).count()
-            if cantidad >= servicio.max_people:
-                return redirect('detalle_servicio', service_id=service_id)
-        else:
-            if Appointment.objects.filter(service=servicio, date=fecha, time=hora).exists():
+            try:
+                fecha = datetime.strptime(fecha_str, "%Y-%m-%d").date()
+                hora = datetime.strptime(hora_str, "%H:%M").time()
+            except (ValueError, TypeError):
                 return redirect('detalle_servicio', service_id=service_id)
 
-        Appointment.objects.create(
-            user=request.user,
-            service=servicio,
-            date=fecha,
-            time=hora
-        )
-        return redirect('confirmacion_turno')
+            if fecha <= now().date():
+                return redirect('detalle_servicio', service_id=service_id)
 
-    return redirect('lista_servicios')
+            dia_semana = fecha.weekday()
+            horarios = Schedule.objects.filter(service=servicio, day_of_week=dia_semana)
+            dentro_del_horario = any(h.start_time <= hora < h.end_time for h in horarios)
+            if not dentro_del_horario:
+                return redirect('detalle_servicio', service_id=service_id)
+
+            if servicio.max_people:
+                cantidad = Appointment.objects.filter(service=servicio, date=fecha, time=hora).count()
+                if cantidad >= servicio.max_people:
+                    return redirect('detalle_servicio', service_id=service_id)
+            else:
+                if Appointment.objects.filter(service=servicio, date=fecha, time=hora).exists():
+                    return redirect('detalle_servicio', service_id=service_id)
+
+            Appointment.objects.create(
+                user=request.user,
+                service=servicio,
+                date=fecha,
+                time=hora
+            )
+            return redirect('confirmacion_turno')
+
+        return redirect('lista_servicios')
 
 
 @login_required

@@ -10,7 +10,7 @@ urlpatterns = [
     path('', home, name='home'),
     path('store/', include('store.urls')),  # store
     path('cart/', include('cart.urls')), # carrito
-    path('servicios/', include('services.urls')), #servicois
+    path('servicios/', include('services.urls')), #servicios
     path('cuentas/', include('accounts.urls')),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 

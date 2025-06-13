@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import panel_profesional
+#from .views import panel_profesional
 from .views import panel_profesional, panel_admin
 from .views import exportar_pdf_agenda
 

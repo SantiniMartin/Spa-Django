@@ -11,8 +11,10 @@ class Professional(models.Model):
 class Service(models.Model):
     name = models.CharField(max_length=100)
     description = models.TextField()
+
     duration_minutes = models.PositiveIntegerField(default=60)
     max_people = models.PositiveIntegerField(null=True, blank=True)  # None si es individual
+    rice = models.DecimalField(max_digits=8, decimal_places=2)
     professional = models.ForeignKey(Professional, on_delete=models.CASCADE)
     imagen = models.ImageField(upload_to='images/', null=True)
 
