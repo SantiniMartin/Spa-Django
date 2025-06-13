@@ -14,6 +14,7 @@ class Service(models.Model):
     duration_minutes = models.PositiveIntegerField(default=60)
     max_people = models.PositiveIntegerField(null=True, blank=True)  # None si es individual
     professional = models.ForeignKey(Professional, on_delete=models.CASCADE)
+    imagen = models.ImageField(upload_to='images/', null=True)
 
     def __str__(self):
         return self.name

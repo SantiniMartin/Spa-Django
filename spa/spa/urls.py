@@ -12,7 +12,7 @@ urlpatterns = [
     path('cart/', include('cart.urls')), # carrito
     path('servicios/', include('services.urls')), #servicois
     path('cuentas/', include('accounts.urls')),
-]
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

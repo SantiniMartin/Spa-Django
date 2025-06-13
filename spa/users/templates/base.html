@@ -10,26 +10,26 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
 </head>
 
-<body class="bg-gray-100 min-h-screen">
+<body class="bg-gray-100 min-h-screen flex flex-col">
   <nav class="bg-white shadow px-6 py-4 flex justify-between items-center">
     <div class="text-xl font-bold text-green-700">
       <a href="/">Spa Sentirse Bien</a>
     </div>
     <div class="flex">
-      <a href="#" class="text-green-600 hover:underline mr-4">Inicio</a>
-      <a href="{% url 'product_list' %}"  class="text-green-600 hover:underline mr-4">Tienda</a>
+      <a href="{% url 'home' %}" class="text-green-600 hover:underline mr-4">Inicio</a>
+      <a href="{% url 'product_list' %}" class="text-green-600 hover:underline mr-4">Tienda</a>
       <a href="{% url 'lista_servicios' %}" class="text-green-600 hover:underline mr-4">Servicios</a>
       {% if user.is_authenticated %}
-      <a href="{% url 'ver_carrito' %}"  class="text-green-600 hover:underline mr-4">Carrito</a>
+      <a href="{% url 'ver_carrito' %}" class="text-green-600 hover:underline mr-4">Carrito</a>
       <a href="{% url 'mis_citas' %}" class="text-green-600 hover:underline mr-4">Mis citas</a>
       <form method="POST" action="{% url 'logout' %}">
-      
-      {% if user.groups.all.0.name == "Profesional" %}
-      <a href="{% url 'panel_profesional' %}" class="text-green-600 hover:underline mr-4">Mis turnos</a>
-      {% endif %}
-      {% if user.groups.all.0.name == "Admin" %}
-      <a href="{% url 'panel_admin' %}" class="text-green-600 hover:underline mr-4">Mis turnos</a>
-      {% endif %}
+
+        {% if user.groups.all.0.name == "Profesional" %}
+        <a href="{% url 'panel_profesional' %}" class="text-green-600 hover:underline mr-4">Mis turnos</a>
+        {% endif %}
+        {% if user.groups.all.0.name == "Admin" %}
+        <a href="{% url 'panel_admin' %}" class="text-green-600 hover:underline mr-4">Mis turnos</a>
+        {% endif %}
 
         {% csrf_token %}
         <button type="submit" class="text-red-600 hover:underline">Cerrar sesión</button>
@@ -41,7 +41,7 @@
     </div>
   </nav>
 
-  <main class="">{% block content %}{% endblock %}</main>
+  <main class="flex-grow">{% block content %}{% endblock %}</main>
 
   <footer class="bg-green-50 text-green-900 pt-16 border-t border-green-100">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 grid grid-cols-1 md:grid-cols-3 gap-8">
