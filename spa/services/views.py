@@ -1,7 +1,7 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 from django.utils.timezone import now
-from datetime import timedelta, datetime, time as dtime
+from datetime import timedelta, datetime
 
 from .models import Service, Schedule, Appointment
 
