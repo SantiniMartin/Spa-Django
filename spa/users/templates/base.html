@@ -79,10 +79,8 @@
         <ul class="space-y-2 text-sm">
           <li><a href="{% url 'home' %}" class="hover:underline">Inicio</a></li>
           <li><a href="{% url 'product_list' %}" class="hover:underline">Tienda</a></li>
-          <li><a href="#" class="hover:underline">Servicios</a></li>
-          <li><a href="#" class="hover:underline">Reservar cita</a></li>
-          <li><a href="{% url 'login' %}" class="hover:underline">Iniciar sesión</a></li>
-          <li><a href="{% url 'registro' %}" class="hover:underline">Registrarse</a></li>
+          <li><a href="{% url 'lista_servicios' %}" class="hover:underline">Servicios</a></li>
+          <li><a href="{% url 'lista_servicios' %}" class="hover:underline">Reservar cita</a></li>
         </ul>
       </div>
 
@@ -126,6 +124,26 @@
     </div>
   </footer>
 
+  <!-- Chatbot flotante -->
+  <div id="chatbot" class="fixed bottom-4 right-4 w-80 max-w-full bg-white rounded-lg shadow-lg z-50 hidden">
+    <div class="bg-green-600 text-white p-3 rounded-t-lg flex justify-between items-center">
+      <span class="font-semibold">Asistente Spa</span>
+      <button onclick="toggleChat()" class="text-white font-bold">×</button>
+    </div>
+    <div id="chat-log" class="p-3 h-64 overflow-y-auto text-sm space-y-2 bg-gray-50"></div>
+    <form onsubmit="sendMessage(event)" class="p-3 border-t">
+      <input type="text" id="user-input" class="w-full p-2 border rounded text-sm"
+        placeholder="Escribí tu consulta..." />
+    </form>
+  </div>
+
+  <!-- Botón flotante -->
+  <button onclick="toggleChat()"
+    class="fixed bottom-4 right-4 bg-green-600 text-white px-4 py-2 rounded-full shadow-lg z-40 text-4xl">
+    💬
+  </button>
+
+
 
   <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
 
@@ -146,5 +164,55 @@
     });
   </script>
 </body>
+
+<script>
+  function toggleChat() {
+    const chat = document.getElementById("chatbot");
+    chat.classList.toggle("hidden");
+    if (!chat.classList.contains("hidden")) {
+      document.getElementById("user-input").focus();
+    }
+  }
+
+  function sendMessage(event) {
+    event.preventDefault();
+    const input = document.getElementById("user-input");
+    const message = input.value.trim();
+    if (message === "") return;
+
+    appendMessage("usuario", message);
+    respond(message.toLowerCase());
+    input.value = "";
+  }
+
+  function appendMessage(sender, message) {
+    const log = document.getElementById("chat-log");
+    const div = document.createElement("div");
+    div.className = sender === "bot" ? "text-left text-green-800" : "text-right text-blue-800";
+    div.innerText = message;
+    log.appendChild(div);
+    log.scrollTop = log.scrollHeight;
+  }
+
+  function respond(message) {
+    let response = "No entendí tu consulta. ¿Podés reformularla?";
+    if (message.includes("hola") || message.includes("buenas")) {
+      response = "¡Hola! ¿En qué puedo ayudarte?";
+    } else if (message.includes("servicio")) {
+      response = "Ofrecemos masajes, limpieza facial, yoga, reiki, y más.";
+    } else if (message.includes("turno")) {
+      response = "Podés reservar turnos desde la sección 'Servicios'.";
+    } else if (message.includes("pago")) {
+      response = "Los pagos se realizan por tarjeta de débito desde la web.";
+    } else if (message.includes("descuento")) {
+      response = "Si reservás y pagás con anticipación, tenés un 15% de descuento.";
+    } else if (message.includes("horarios")) {
+      response = "Trabajamos de lunes a viernes de 9hs a 20hs, los sábados de 10hs a 18hs y los domingo de 10hs a 16hs.";
+    }
+
+    setTimeout(() => appendMessage("bot", response), 500);
+  }
+</script>
+
 
 </html>
