@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+{% block title %}Agenda de hoy{% endblock %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-6">
+    <h1 class="text-2xl font-bold text-green-700 mb-4">Turnos del día: {{ fecha|date:"l d/m/Y" }}</h1>
+    <form method="GET" class="mb-6">
+        <label for="fecha" class="font-semibold text-gray-700">Seleccionar fecha:</label>
+        <input type="date" name="fecha" id="fecha" value="{{ fecha|date:'Y-m-d' }}"
+            class="border px-3 py-2 rounded-xl ml-2">
+        <button type="submit" class="ml-2 bg-green-600 text-white px-4 py-2 rounded-xl hover:bg-green-700">
+            Ver agenda
+        </button>
+    </form>
+
+    {% if turnos_por_servicio %}
+        {% for servicio, turnos in turnos_por_servicio.items %}
+        <div class="mb-6 bg-white shadow rounded-xl p-4">
+            <h2 class="text-xl font-semibold text-green-800 mb-2">{{ servicio }}</h2>
+            <table class="w-full text-left border-collapse">
+                <thead>
+                    <tr class="bg-green-100">
+                        <th class="p-2">Hora</th>
+                        <th class="p-2">Cliente</th>
+                    </tr>
+                </thead>
+                <form method="GET" class="mb-6">
+                    <label for="fecha" class="font-semibold text-gray-700">Seleccionar fecha:</label>
+                    <input type="date" name="fecha" id="fecha" value="{{ fecha|date:'Y-m-d' }}"
+                        class="border px-3 py-2 rounded-xl ml-2">
+                    <button type="submit" class="ml-2 bg-green-600 text-white px-4 py-2 rounded-xl hover:bg-green-700">
+                        Ver agenda
+                    </button>
+                </form>
+                <a href="{% url 'exportar_pdf_agenda' %}?fecha={{ fecha|date:'Y-m-d' }}"
+                class="ml-4 bg-green-700 text-white px-4 py-2 rounded-xl hover:bg-green-800"
+                target="_blank">
+                    Exportar PDF
+                </a>
+                <tbody>
+                    {% for turno in turnos %}
+                    <tr class="border-t">
+                        <td class="p-2">{{ turno.time|time:"H:i" }}</td>
+                        <td class="p-2">{{ turno.user.get_full_name|default:turno.user.username }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% endfor %}
+        <button onclick="window.print()" class="px-4 py-2 bg-green-600 text-white rounded-xl hover:bg-green-700">
+            Imprimir agenda
+        </button>
+    {% else %}
+                    <form method="GET" class="mb-6">
+                    <label for="fecha" class="font-semibold text-gray-700">Seleccionar fecha:</label>
+                    <input type="date" name="fecha" id="fecha" value="{{ fecha|date:'Y-m-d' }}"
+                        class="border px-3 py-2 rounded-xl ml-2">
+                    <button type="submit" class="ml-2 bg-green-600 text-white px-4 py-2 rounded-xl hover:bg-green-700">
+                        Ver agenda
+                    </button>
+                </form>
+        <p>No hay turnos agendados para hoy.</p>
+    {% endif %}
+</div>
+{% endblock %}

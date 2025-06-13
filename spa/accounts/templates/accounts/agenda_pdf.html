@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <style>
+        @page { size: A4; margin: 30px; }
+        body { font-family: Arial, sans-serif; font-size: 12px; }
+
+        header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        header img {
+            height: 60px;
+            margin-bottom: 10px;
+        }
+
+        h1 {
+            font-size: 20px;
+            margin-bottom: 5px;
+            color: #166534;
+        }
+
+        .fecha {
+            font-size: 14px;
+            margin-bottom: 20px;
+        }
+
+        h2 {
+            font-size: 16px;
+            margin-top: 20px;
+            margin-bottom: 5px;
+            color: #1e3a8a;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 10px;
+        }
+
+        th, td {
+            border: 1px solid #ccc;
+            padding: 6px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #e6f4ea;
+        }
+
+        footer {
+            position: fixed;
+            bottom: 10px;
+            left: 30px;
+            right: 30px;
+            text-align: center;
+            font-size: 10px;
+            color: #888;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <img src="{{ logo_path }}" alt="Logo" style="height: 60px;">
+    <h1>Agenda de Turnos</h1>
+    <div class="fecha">{{ fecha|date:"l d/m/Y" }}</div>
+</header>
+
+{% for servicio, turnos in turnos_por_servicio.items %}
+<h2>{{ servicio }}</h2>
+<table>
+    <thead>
+        <tr>
+            <th>Hora</th>
+            <th>Cliente</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for turno in turnos %}
+        <tr>
+            <td>{{ turno.time|time:"H:i" }}</td>
+            <td>{{ turno.user.get_full_name|default:turno.user.username }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endfor %}
+
+<footer>
+    Clínica de la Dra. Felicidad · Generado automáticamente
+</footer>
+
+</body>
+</html>

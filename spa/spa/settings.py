@@ -42,7 +42,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'store',
     'cart',
-    'services'
+    'services',
+    'accounts',
 ]
 
 MIDDLEWARE = [
@@ -129,7 +130,7 @@ STATICFILES_DIRS = [BASE_DIR / 'static']
 
 #MEDIAAA ARCHIVOS QUE NO SON STATICSS
 MEDIA_URL = '/media/'
-MEDIA_ROOT = BASE_DIR / 'media'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
