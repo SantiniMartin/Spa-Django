@@ -1,7 +1,6 @@
 SpaDjango-env/
 requirements.txt
 *.pyc
-db.sqlite3
 *.log
 *.pyo
 *.pyd
