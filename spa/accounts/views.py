@@ -26,7 +26,7 @@ def panel_profesional(request):
         date=manana
     ).order_by('time')
 
-    return render(request, 'services/panel_profesional.html', {
+    return render(request, 'accounts/panel_profesional.html', {
         'turnos': turnos,
         'fecha': manana
     })

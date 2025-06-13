@@ -4,6 +4,14 @@
 {% block content %}
 <div class="container mx-auto px-4 py-6">
     <h1 class="text-2xl font-bold text-green-700 mb-4">Turnos asignados para {{ fecha|date:"l d/m/Y" }}</h1>
+    <form method="GET" class="mb-6">
+        <label for="fecha" class="font-semibold text-gray-700">Seleccionar fecha:</label>
+        <input type="date" name="fecha" id="fecha" value="{{ fecha|date:'Y-m-d' }}"
+            class="border px-3 py-2 rounded-xl ml-2">
+        <button type="submit" class="ml-2 bg-green-600 text-white px-4 py-2 rounded-xl hover:bg-green-700">
+            Ver agenda
+        </button>
+    </form>
 
     {% if turnos %}
     <table class="w-full bg-white shadow rounded-xl">

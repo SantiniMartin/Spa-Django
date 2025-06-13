@@ -23,6 +23,14 @@
       <a href="{% url 'ver_carrito' %}"  class="text-green-600 hover:underline mr-4">Carrito</a>
       <a href="{% url 'mis_citas' %}" class="text-green-600 hover:underline mr-4">Mis citas</a>
       <form method="POST" action="{% url 'logout' %}">
+      
+      {% if user.groups.all.0.name == "Profesional" %}
+      <a href="{% url 'panel_profesional' %}" class="text-green-600 hover:underline mr-4">Mis turnos</a>
+      {% endif %}
+      {% if user.groups.all.0.name == "Admin" %}
+      <a href="{% url 'panel_admin' %}" class="text-green-600 hover:underline mr-4">Mis turnos</a>
+      {% endif %}
+
         {% csrf_token %}
         <button type="submit" class="text-red-600 hover:underline">Cerrar sesión</button>
       </form>
