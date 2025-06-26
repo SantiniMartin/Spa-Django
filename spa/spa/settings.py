@@ -8,10 +8,7 @@ SECRET_KEY = 'django-insecure-1r-g*ful0no(%rc8p709p&5hvw*1hqgum635ky$#co!hpx)q2$
 DEBUG = True
 ALLOWED_HOSTS = []
 
-ALLOWED_HOSTS = [
-    'spa-django.onrender.com',
-    'spa-django.onrender.com:8000',
-]
+
 
 # Redirecciones post login/logout
 LOGIN_REDIRECT_URL = '/'
@@ -88,8 +85,4 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-# Configuración específica para producción en Render
-CSRF_TRUSTED_ORIGINS = ['https://spa-django.onrender.com']
-CSRF_COOKIE_SECURE = True
-SESSION_COOKIE_SECURE = True
-SECURE_SSL_REDIRECT = True
+
