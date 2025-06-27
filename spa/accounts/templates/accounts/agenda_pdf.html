@@ -1,274 +1,275 @@
 <!DOCTYPE html>
 <html lang="es">
-<head>
-    <meta charset="UTF-8">
+  <head>
+    <meta charset="UTF-8" />
     <style>
-        body { 
-            font-family: Arial, sans-serif; 
-            font-size: 11px; 
-            line-height: 1.4;
-            color: #333;
-            margin: 20px;
-        }
+      body {
+        font-family: Arial, sans-serif;
+        font-size: 11px;
+        line-height: 1.4;
+        color: #333;
+        margin: 30px;
+      }
 
-        header {
-            text-align: center;
-            margin-bottom: 20px;
-            border-bottom: 2px solid #166534;
-            padding-bottom: 15px;
-        }
+      header {
+        text-align: center;
+        margin-bottom: 20px;
+        border-bottom: 2px solid #166534;
+        padding-bottom: 15px;
+      }
 
-        header img {
-            height: 60px;
-            margin-bottom: 10px;
-        }
+      header img {
+        height: 60px;
+        margin-bottom: 10px;
+      }
 
-        h1 {
-            font-size: 24px;
-            margin-bottom: 5px;
-            color: #166534;
-            font-weight: bold;
-        }
+      h1 {
+        font-size: 24px;
+        margin-bottom: 5px;
+        color: #166534;
+        font-weight: bold;
+      }
 
-        .fecha {
-            font-size: 16px;
-            margin-bottom: 10px;
-            color: #374151;
-        }
+      .fecha {
+        font-size: 16px;
+        margin-bottom: 10px;
+        color: #374151;
+      }
 
-        .estadisticas {
-            background-color: #f0f9ff;
-            border: 1px solid #0ea5e9;
-            border-radius: 5px;
-            padding: 10px;
-            margin-bottom: 20px;
-            text-align: center;
-        }
+      .estadisticas {
+        background-color: #f0f9ff;
+        border: 1px solid #0ea5e9;
+        border-radius: 5px;
+        padding: 10px;
+        margin-bottom: 20px;
+        text-align: center;
+      }
 
-        .estadisticas table {
-            width: 100%;
-            border-collapse: collapse;
-        }
+      .estadisticas table {
+        width: 100%;
+        border-collapse: collapse;
+      }
 
-        .estadisticas td {
-            padding: 5px;
-            text-align: center;
-            border: none;
-        }
+      .estadisticas td {
+        padding: 5px;
+        text-align: center;
+        border: none;
+      }
 
-        .estadisticas .numero {
-            font-size: 18px;
-            font-weight: bold;
-            color: #0ea5e9;
-        }
+      .estadisticas .numero {
+        font-size: 18px;
+        font-weight: bold;
+        color: #0ea5e9;
+      }
 
-        .estadisticas .label {
-            font-size: 10px;
-            color: #374151;
-        }
+      .estadisticas .label {
+        font-size: 10px;
+        color: #374151;
+      }
 
-        h2 {
-            font-size: 16px;
-            margin-top: 25px;
-            margin-bottom: 10px;
-            color: #166534;
-            font-weight: bold;
-            border-bottom: 1px solid #166534;
-            padding-bottom: 5px;
-        }
+      h2 {
+        font-size: 16px;
+        margin-top: 25px;
+        margin-bottom: 10px;
+        color: #166534;
+        font-weight: bold;
+        border-bottom: 1px solid #166534;
+        padding-bottom: 5px;
+      }
 
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-bottom: 15px;
-        }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 15px;
+      }
 
-        th, td {
-            border: 1px solid #d1d5db;
-            padding: 8px;
-            text-align: left;
-            vertical-align: top;
-        }
+      th,
+      td {
+        border: 1px solid #d1d5db;
+        padding: 8px;
+        text-align: left;
+        vertical-align: top;
+      }
 
-        th {
-            background-color: #f3f4f6;
-            font-weight: bold;
-            color: #374151;
-            font-size: 10px;
-        }
+      th {
+        background-color: #f3f4f6;
+        font-weight: bold;
+        color: #374151;
+        font-size: 10px;
+      }
 
-        td {
-            font-size: 10px;
-        }
+      td {
+        font-size: 10px;
+      }
 
-        .hora {
-            font-weight: bold;
-            color: #166534;
-            width: 60px;
-        }
+      .hora {
+        font-weight: bold;
+        color: #166534;
+        width: 60px;
+      }
 
-        .cliente {
-            font-weight: bold;
-            color: #1f2937;
-        }
+      .cliente {
+        font-weight: bold;
+        color: #1f2937;
+      }
 
-        .email {
-            color: #6b7280;
-            font-size: 9px;
-        }
+      .email {
+        color: #6b7280;
+        font-size: 9px;
+      }
 
-        .telefono {
-            color: #6b7280;
-            font-size: 9px;
-        }
+      .telefono {
+        color: #6b7280;
+        font-size: 9px;
+      }
 
-        .profesional {
-            color: #059669;
-            font-weight: bold;
-        }
+      .profesional {
+        color: #059669;
+        font-weight: bold;
+      }
 
-        .no-disponible {
-            color: #9ca3af;
-            font-style: italic;
-        }
+      .no-disponible {
+        color: #9ca3af;
+        font-style: italic;
+      }
 
-        .error {
-            color: #dc2626;
-            font-style: italic;
-        }
+      .error {
+        color: #dc2626;
+        font-style: italic;
+      }
 
-        .resumen {
-            margin-top: 20px;
-            background-color: #f0fdf4;
-            border: 1px solid #16a34a;
-            border-radius: 5px;
-            padding: 15px;
-        }
+      .resumen {
+        margin-top: 20px;
+        background-color: #f0fdf4;
+        border: 1px solid #16a34a;
+        border-radius: 5px;
+        padding: 15px;
+      }
 
-        .resumen h3 {
-            color: #166534;
-            font-size: 14px;
-            margin-bottom: 10px;
-            font-weight: bold;
-        }
+      .resumen h3 {
+        color: #166534;
+        font-size: 14px;
+        margin-bottom: 10px;
+        font-weight: bold;
+      }
 
-        footer {
-            margin-top: 30px;
-            text-align: center;
-            font-size: 9px;
-            color: #6b7280;
-            border-top: 1px solid #e5e7eb;
-            padding-top: 10px;
-        }
+      footer {
+        margin-top: 30px;
+        text-align: center;
+        font-size: 9px;
+        color: #6b7280;
+        border-top: 1px solid #e5e7eb;
+        padding-top: 10px;
+      }
 
-        .page-break {
-            page-break-before: always;
-        }
+      .page-break {
+        page-break-before: always;
+      }
     </style>
-</head>
-<body>
+  </head>
+  <body>
+    <header>
+      {% if logo_path %}
+      <img src="{{ logo_path }}" alt="Logo" style="height: 60px" />
+      {% endif %}
+      <h1>Agenda de Turnos</h1>
+      <div class="fecha">{{ fecha|date:"l d/m/Y" }}</div>
+    </header>
 
-<header>
-    {% if logo_path %}
-        <img src="{{ logo_path }}" alt="Logo" style="height: 60px;">
-    {% endif %}
-    <h1>Agenda de Turnos</h1>
-    <div class="fecha">{{ fecha|date:"l d/m/Y" }}</div>
-</header>
-
-<!-- Estadísticas -->
-<div class="estadisticas">
-    <table>
+    <!-- Estadísticas -->
+    <div class="estadisticas">
+      <table>
         <tr>
-            <td>
-                <div class="numero">{{ total_turnos }}</div>
-                <div class="label">Total de Turnos</div>
-            </td>
-            <td>
-                <div class="numero">{{ servicios_con_turnos }}</div>
-                <div class="label">Servicios</div>
-            </td>
-            <td>
-                <div class="numero">{{ fecha|date:"d/m/Y" }}</div>
-                <div class="label">Fecha</div>
-            </td>
+          <td>
+            <div class="numero">{{ total_turnos }}</div>
+            <div class="label">Total de Turnos</div>
+          </td>
+          <td>
+            <div class="numero">{{ servicios_con_turnos }}</div>
+            <div class="label">Servicios</div>
+          </td>
+          <td>
+            <div class="numero">{{ fecha|date:"d/m/Y" }}</div>
+            <div class="label">Fecha</div>
+          </td>
         </tr>
-    </table>
-</div>
+      </table>
+    </div>
 
-<!-- Turnos por servicio -->
-{% for servicio, turnos in turnos_por_servicio.items %}
-    <h2>{{ servicio }} ({{ turnos|length }} turno{{ turnos|length|pluralize:"s" }})</h2>
+    <!-- Turnos por servicio -->
+    {% for servicio, turnos in turnos_por_servicio.items %}
+    <h2>
+      {{ servicio }} ({{ turnos|length }} turno{{ turnos|length|pluralize:"s"
+      }})
+    </h2>
     <table>
-        <thead>
-            <tr>
-                <th style="width: 60px;">Hora</th>
-                <th style="width: 120px;">Cliente</th>
-                <th style="width: 150px;">Email</th>
-                <th style="width: 100px;">Teléfono</th>
-                <th style="width: 120px;">Profesional</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for turno in turnos %}
-            <tr>
-                <td class="hora">{{ turno.time|time:"H:i" }}</td>
-                <td class="cliente">
-                    {% if turno.user %}
-                        {{ turno.user.get_full_name|default:turno.user.username }}
-                    {% else %}
-                        <span class="error">Usuario no encontrado</span>
-                    {% endif %}
-                </td>
-                <td class="email">
-                    {% if turno.user and turno.user.email %}
-                        {{ turno.user.email }}
-                    {% else %}
-                        <span class="no-disponible">No disponible</span>
-                    {% endif %}
-                </td>
-                <td class="telefono">
-                    {% if turno.user and turno.user.profile and turno.user.profile.phone %}
-                        {{ turno.user.profile.phone }}
-                    {% else %}
-                        <span class="no-disponible">No disponible</span>
-                    {% endif %}
-                </td>
-                <td class="profesional">
-                    {% if turno.service and turno.service.professional and turno.service.professional.user %}
-                        {{ turno.service.professional.user.get_full_name|default:turno.service.professional.user.username }}
-                    {% else %}
-                        <span class="no-disponible">No asignado</span>
-                    {% endif %}
-                </td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-{% endfor %}
-
-<!-- Resumen final -->
-<div class="resumen">
-    <h3>Resumen del día</h3>
-    <table>
+      <thead>
         <tr>
-            <td><strong>Fecha:</strong></td>
-            <td>{{ fecha|date:"l d/m/Y" }}</td>
-            <td><strong>Total de turnos:</strong></td>
-            <td>{{ total_turnos }}</td>
+          <th style="width: 60px">Hora</th>
+          <th style="width: 120px">Cliente</th>
+          <th style="width: 150px">Email</th>
+          <th style="width: 100px">Teléfono</th>
+          <th style="width: 120px">Profesional</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for turno in turnos %}
+        <tr>
+          <td class="hora">{{ turno.time|time:"H:i" }}</td>
+          <td class="cliente">
+            {% if turno.user %} {{
+            turno.user.get_full_name|default:turno.user.username }} {% else %}
+            <span class="error">Usuario no encontrado</span>
+            {% endif %}
+          </td>
+          <td class="email">
+            {% if turno.user and turno.user.email %} {{ turno.user.email }} {%
+            else %}
+            <span class="no-disponible">No disponible</span>
+            {% endif %}
+          </td>
+          <td class="telefono">
+            {% if turno.user and turno.user.profile and turno.user.profile.phone
+            %} {{ turno.user.profile.phone }} {% else %}
+            <span class="no-disponible">No disponible</span>
+            {% endif %}
+          </td>
+          <td class="profesional">
+            {% if turno.service and turno.service.professional and
+            turno.service.professional.user %} {{
+            turno.service.professional.user.get_full_name|default:turno.service.professional.user.username
+            }} {% else %}
+            <span class="no-disponible">No asignado</span>
+            {% endif %}
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    {% endfor %}
+
+    <!-- Resumen final -->
+    <div class="resumen">
+      <h3>Resumen del día</h3>
+      <table>
+        <tr>
+          <td><strong>Fecha:</strong></td>
+          <td>{{ fecha|date:"l d/m/Y" }}</td>
+          <td><strong>Total de turnos:</strong></td>
+          <td>{{ total_turnos }}</td>
         </tr>
         <tr>
-            <td><strong>Servicios con turnos:</strong></td>
-            <td>{{ servicios_con_turnos }}</td>
-            <td><strong>Generado el:</strong></td>
-            <td>{% now "d/m/Y H:i" %}</td>
+          <td><strong>Servicios con turnos:</strong></td>
+          <td>{{ servicios_con_turnos }}</td>
+          <td><strong>Generado el:</strong></td>
+          <td>{% now "d/m/Y H:i" %}</td>
         </tr>
-    </table>
-</div>
+      </table>
+    </div>
 
-<footer>
-    Clínica de la Dra. Felicidad · Agenda de Turnos · Generado automáticamente el {% now "d/m/Y H:i" %}
-</footer>
-
-</body>
+    <footer>
+      Clínica de la Dra. Felicidad · Agenda de Turnos · Generado automáticamente
+      el {% now "d/m/Y H:i" %}
+    </footer>
+  </body>
 </html>
