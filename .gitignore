@@ -7,3 +7,5 @@ requirements.txt
 __pycache__/
 *.env
 *.venv
+mi_entorno/
+env/
