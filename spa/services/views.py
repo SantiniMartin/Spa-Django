@@ -2,6 +2,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 from django.utils.timezone import now, make_aware
 from datetime import timedelta, datetime
+from django.contrib import messages
 
 from .models import Service, Schedule, Appointment
 from cart.models import CartItem, Cart
@@ -178,4 +179,48 @@ def confirmacion_turno(request):
 def mis_citas(request):
     citas = Appointment.objects.filter(user=request.user).order_by('date', 'time')
     return render(request, 'services/mis_citas.html', {'citas': citas})
+
+@login_required
+def cancelar_cita(request, cita_id):
+    cita = get_object_or_404(Appointment, id=cita_id, user=request.user)
+    cita.delete()
+    messages.success(request, "Cita cancelada correctamente. El horario ya está disponible para otros usuarios.")
+    return redirect('mis_citas')
+
+@login_required
+def modificar_cita(request, cita_id):
+    cita = get_object_or_404(Appointment, id=cita_id, user=request.user)
+    from .models import Service, Schedule
+    servicios = Service.objects.all()
+    selected_service_id = request.POST.get('servicio') or cita.service.id
+    selected_service = Service.objects.get(id=selected_service_id)
+    selected_fecha = request.POST.get('fecha') or cita.date
+    horas_disponibles = []
+    if selected_fecha:
+        import datetime
+        fecha_dt = selected_fecha if isinstance(selected_fecha, datetime.date) else datetime.datetime.strptime(selected_fecha, "%Y-%m-%d").date()
+        dia_semana = fecha_dt.weekday()
+        horarios = Schedule.objects.filter(service=selected_service, day_of_week=dia_semana)
+        for horario in horarios:
+            hora_actual = datetime.datetime.combine(fecha_dt, horario.start_time)
+            hora_fin = datetime.datetime.combine(fecha_dt, horario.end_time)
+            while hora_actual < hora_fin:
+                hora = hora_actual.time()
+                if not Appointment.objects.filter(service=selected_service, date=fecha_dt, time=hora).exclude(id=cita.id).exists():
+                    horas_disponibles.append(hora)
+                hora_actual += datetime.timedelta(minutes=selected_service.duration_minutes)
+    if request.method == 'POST' and request.POST.get('fecha') and request.POST.get('hora') and request.POST.get('servicio'):
+        cita.service = selected_service
+        cita.date = selected_fecha
+        cita.time = request.POST.get('hora')
+        cita.save()
+        messages.success(request, 'Cita modificada correctamente.')
+        return redirect('mis_citas')
+    return render(request, 'services/modificar_cita.html', {
+        'cita': cita,
+        'servicios': servicios,
+        'selected_service': selected_service,
+        'selected_fecha': selected_fecha,
+        'horas_disponibles': horas_disponibles,
+    })
 

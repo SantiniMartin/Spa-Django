@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% block title %}Modificar Cita{% endblock %}
+{% block content %}
+<div class="container mx-auto px-4 py-8 max-w-lg">
+  <h1 class="text-2xl font-bold mb-6 text-blue-700">Modificar Cita</h1>
+  <form method="POST" class="bg-white rounded-xl shadow p-6 space-y-4">
+    {% csrf_token %}
+    <div>
+      <label class="block font-semibold mb-1">Servicio</label>
+      <select name="servicio" class="w-full border rounded px-3 py-2" onchange="this.form.submit()">
+        {% for servicio in servicios %}
+        <option value="{{ servicio.id }}" {% if servicio.id == selected_service.id %}selected{% endif %}>{{ servicio.name }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div>
+      <label class="block font-semibold mb-1">Fecha</label>
+      <input type="date" name="fecha" value="{{ selected_fecha }}" class="w-full border rounded px-3 py-2" onchange="this.form.submit()" required>
+    </div>
+    <div>
+      <label class="block font-semibold mb-1">Hora</label>
+      <select name="hora" class="w-full border rounded px-3 py-2" required>
+        {% for hora in horas_disponibles %}
+        <option value="{{ hora|time:'H:i' }}" {% if cita.time == hora %}selected{% endif %}>{{ hora|time:'H:i' }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div class="flex gap-4 mt-6">
+      <button type="submit" class="px-6 py-2 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700 transition">Guardar Cambios</button>
+      <a href="{% url 'mis_citas' %}" class="px-6 py-2 bg-gray-300 text-gray-800 rounded-lg font-semibold hover:bg-gray-400 transition">Cancelar</a>
+    </div>
+  </form>
+</div>
+{% endblock %} 

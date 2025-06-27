@@ -51,14 +51,17 @@ def checkout(request):
     # Verificar si todos los servicios del carrito están a más de 48 hs
     servicios_a_mas_de_48hs = True
     ahora = now()
+    fechas_citas = set()
     for item in carrito.items.all():
-        # Buscar la próxima cita de ese servicio para el usuario
         proxima_cita = item.service.appointment_set.filter(user=request.user).order_by('date', 'time').first()
         if proxima_cita:
             fecha_hora_servicio = make_aware(datetime.combine(proxima_cita.date, proxima_cita.time))
             if fecha_hora_servicio - ahora < timedelta(hours=48):
                 servicios_a_mas_de_48hs = False
-                break
+            fechas_citas.add(proxima_cita.date)
+
+    # Solo permitir pago conjunto si todas las fechas son iguales
+    pago_conjunto_habilitado = len(fechas_citas) == 1 and len(fechas_citas) > 0
 
     if metodo_pago == 'debito' and servicios_a_mas_de_48hs:
         aplica_descuento = True
@@ -71,6 +74,8 @@ def checkout(request):
         'total_con_descuento': total_con_descuento,
         'aplica_descuento': aplica_descuento,
         'metodo_pago': metodo_pago,
+        'pago_conjunto_habilitado': pago_conjunto_habilitado,
+        'fechas_citas': fechas_citas,
     })
 
 @login_required
@@ -128,3 +133,9 @@ def confirmar_compra(request):
 @login_required
 def confirmacion(request):
     return render(request, 'cart/confirmacion.html')
+
+@login_required
+def eliminar_item_checkout(request, item_id):
+    item = get_object_or_404(CartItem, id=item_id, cart=request.user.cart)
+    item.delete()
+    return redirect('checkout')

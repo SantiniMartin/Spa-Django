@@ -9,4 +9,5 @@ urlpatterns = [
     path('checkout/', views.checkout, name='checkout'),
     path('confirmar/', views.confirmar_compra, name='confirmar_compra'),
     path('confirmacion/', views.confirmacion, name='confirmacion'),
+    path('eliminar_checkout/<int:item_id>/', views.eliminar_item_checkout, name='eliminar_item_checkout'),
 ]

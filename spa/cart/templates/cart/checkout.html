@@ -16,7 +16,13 @@
           <p class="text-sm text-gray-600">{{ item.service.description|truncatewords:15 }}</p>
           <p class="text-sm text-gray-600">Cantidad: {{ item.cantidad }}</p>
         </div>
-        <p class="font-bold">${{ item.total_price }}</p>
+        <div class="flex flex-col items-end">
+          <p class="font-bold mb-2">${{ item.total_price }}</p>
+          <form action="{% url 'eliminar_item_checkout' item.id %}" method="POST" onsubmit="return confirm('¿Seguro que deseas eliminar este servicio del pago?');">
+            {% csrf_token %}
+            <button type="submit" class="text-red-600 hover:underline text-sm">Eliminar</button>
+          </form>
+        </div>
       </div>
       {% endfor %}
     </div>
@@ -49,13 +55,26 @@
     </div>
     {% endif %}
 
+    {% if not pago_conjunto_habilitado %}
+    <div class="mt-4 mb-4 p-4 bg-yellow-50 border-l-4 border-yellow-400 text-yellow-800 rounded">
+      <strong>Atención:</strong> Solo puedes pagar juntos los servicios que se realicen el mismo día.<br>
+      Actualmente tienes servicios con fechas distintas en tu carrito:
+      <ul class="list-disc ml-6 mt-2">
+        {% for fecha in fechas_citas %}
+          <li>{{ fecha }}</li>
+        {% endfor %}
+      </ul>
+      Por favor, elimina o paga por separado los servicios de fechas diferentes.
+    </div>
+    {% endif %}
+
     <form action="{% url 'confirmar_compra' %}" method="POST" class="mt-6">
       {% csrf_token %}
       <input type="hidden" name="metodo_pago" value="{{ metodo_pago }}">
       <button
         type="submit"
-        class="w-full bg-green-600 text-white py-3 rounded-lg font-semibold hover:bg-green-700"
-        {% if not metodo_pago %}disabled style="background:#ccc;cursor:not-allowed;"{% endif %}
+        class="w-full bg-green-600 text-white py-3 rounded-lg font-semibold hover:bg-green-700 transition"
+        {% if not metodo_pago or not pago_conjunto_habilitado %}disabled style="background:#ccc;cursor:not-allowed;"{% endif %}
       >
         Confirmar Compra
       </button>
