@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <style>
+        body { 
+            font-family: Arial, sans-serif; 
+            font-size: 12px; 
+            line-height: 1.4;
+            color: #333;
+            margin: 20px;
+        }
+
+        h1 {
+            font-size: 20px;
+            margin-bottom: 10px;
+            color: #166534;
+            text-align: center;
+        }
+
+        .fecha {
+            font-size: 14px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+
+        th, td {
+            border: 1px solid #ccc;
+            padding: 6px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f0f0f0;
+            font-weight: bold;
+        }
+
+        .servicio {
+            font-size: 14px;
+            font-weight: bold;
+            margin-top: 20px;
+            margin-bottom: 10px;
+            color: #166534;
+        }
+
+        .resumen {
+            margin-top: 30px;
+            padding: 10px;
+            background-color: #f9f9f9;
+            border: 1px solid #ccc;
+        }
+    </style>
+</head>
+<body>
+
+<h1>Agenda de Turnos</h1>
+<div class="fecha">{{ fecha|date:"l d/m/Y" }}</div>
+
+{% for servicio, turnos in turnos_por_servicio.items %}
+    <div class="servicio">{{ servicio }} ({{ turnos|length }} turno{{ turnos|length|pluralize:"s" }})</div>
+    <table>
+        <thead>
+            <tr>
+                <th>Hora </th>
+                <th>Cliente</th>
+                <th>Email</th>
+                <th>Profesional</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for turno in turnos %}
+            <tr>
+                <td>{{ turno.time|time:"H:i" }}</td>
+                <td>
+                    {% if turno.user %}
+                        {{ turno.user.get_full_name|default:turno.user.username }}
+                    {% else %}
+                        Usuario no encontrado
+                    {% endif %}
+                </td>
+                <td>
+                    {% if turno.user and turno.user.email %}
+                        {{ turno.user.email }}
+                    {% else %}
+                        No disponible
+                    {% endif %}
+                </td>
+                <td>
+                    {% if turno.service and turno.service.professional and turno.service.professional.user %}
+                        {{ turno.service.professional.user.get_full_name|default:turno.service.professional.user.username }}
+                    {% else %}
+                        No asignado
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endfor %}
+
+<div class="resumen">
+    <strong>Resumen:</strong><br>
+    Fecha: {{ fecha|date:"l d/m/Y" }}<br>
+    Total de turnos: {{ total_turnos }}<br>
+    Servicios: {{ servicios_con_turnos }}<br>
+    Generado el: {% now "d/m/Y H:i" %}
+</div>
+
+</body>
+</html> 

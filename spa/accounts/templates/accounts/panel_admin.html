@@ -1,51 +1,148 @@
 {% extends "base.html" %}
-{% block title %}Agenda de hoy{% endblock %}
+{% block title %}Panel de Administración - Agenda{% endblock %}
 
 {% block content %}
 <div class="container mx-auto px-4 py-6">
-    <h1 class="text-2xl font-bold text-green-700 mb-4">Turnos del día: {{ fecha|date:"l d/m/Y" }}</h1>
-    <form method="GET" class="mb-6">
-        <label for="fecha" class="font-semibold text-gray-700">Seleccionar fecha:</label>
-        <input type="date" name="fecha" id="fecha" value="{{ fecha|date:'Y-m-d' }}"
-            class="border px-3 py-2 rounded-xl ml-2">
-        <button type="submit" class="ml-2 bg-green-600 text-white px-4 py-2 rounded-xl hover:bg-green-700">
-            Ver agenda
-        </button>
-    </form>
-
-    {% if turnos_por_servicio %}
-        {% for servicio, turnos in turnos_por_servicio.items %}
-        <div class="mb-6 bg-white shadow rounded-xl p-4">
-            <h2 class="text-xl font-semibold text-green-800 mb-2">{{ servicio }}</h2>
-            <table class="w-full text-left border-collapse">
-                <thead>
-                    <tr class="bg-green-100">
-                        <th class="p-2">Hora</th>
-                        <th class="p-2">Cliente</th>
-                    </tr>
-                </thead>
-                <a href="{% url 'exportar_pdf_agenda' %}?fecha={{ fecha|date:'Y-m-d' }}"
-                class="ml-4 bg-green-700 text-white px-4 py-2 rounded-xl hover:bg-green-800"
-                target="_blank">
-                    Exportar PDF
-                </a>
-                <tbody>
-                    {% for turno in turnos %}
-                    <tr class="border-t">
-                        <td class="p-2">{{ turno.time|time:"H:i" }}</td>
-                        <td class="p-2">{{ turno.user.get_full_name|default:turno.user.username }}</td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
+    <!-- Header con título y estadísticas -->
+    <div class="bg-white shadow rounded-xl p-6 mb-6">
+        <div class="flex justify-between items-center mb-4">
+            <h1 class="text-3xl font-bold text-green-700">Panel de Administración</h1>
+            <div class="text-right">
+                <p class="text-sm text-gray-600">Fecha: {{ fecha|date:"l d/m/Y" }}</p>
+                <p class="text-sm text-gray-600">Total turnos: {{ total_turnos }}</p>
+                <p class="text-sm text-gray-600">Servicios: {{ servicios_con_turnos }}</p>
+            </div>
         </div>
-        {% endfor %}
-        <button onclick="window.print()" class="px-4 py-2 bg-green-600 text-white rounded-xl hover:bg-green-700">
-            Imprimir agenda
-        </button>
+        
+        <!-- Formulario de búsqueda por fecha -->
+        <form method="GET" class="bg-gray-50 p-4 rounded-lg">
+            <div class="flex items-center space-x-4">
+                <div>
+                    <label for="fecha" class="block text-sm font-semibold text-gray-700 mb-1">Seleccionar fecha:</label>
+                    <input type="date" name="fecha" id="fecha" value="{{ fecha|date:'Y-m-d' }}"
+                        class="border border-gray-300 px-4 py-2 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent">
+                </div>
+                <div class="flex items-end space-x-2">
+                    <button type="submit" class="bg-green-600 text-white px-6 py-2 rounded-lg hover:bg-green-700 transition-colors">
+                        <i class="fas fa-search mr-2"></i>Buscar
+                    </button>
+                    <a href="{% url 'exportar_pdf_agenda' %}?fecha={{ fecha|date:'Y-m-d' }}"
+                        class="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition-colors inline-flex items-center"
+                        target="_blank">
+                        <i class="fas fa-file-pdf mr-2"></i>Exportar PDF
+                    </a>
+                    <button type="button" onclick="window.print()" 
+                        class="bg-purple-600 text-white px-6 py-2 rounded-lg hover:bg-purple-700 transition-colors">
+                        <i class="fas fa-print mr-2"></i>Imprimir
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <!-- Contenido de turnos -->
+    {% if turnos_por_servicio %}
+        <div class="space-y-6">
+            {% for servicio, turnos in turnos_por_servicio.items %}
+            <div class="bg-white shadow rounded-xl overflow-hidden">
+                <div class="bg-green-100 px-6 py-4 border-b">
+                    <h2 class="text-xl font-semibold text-green-800">{{ servicio }}</h2>
+                    <p class="text-sm text-green-600">{{ turnos|length }} turno{{ turnos|length|pluralize:"s" }}</p>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="w-full">
+                        <thead class="bg-gray-50">
+                            <tr>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Hora</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Cliente</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Email</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Teléfono</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Profesional</th>
+                            </tr>
+                        </thead>
+                        <tbody class="bg-white divide-y divide-gray-200">
+                            {% for turno in turnos %}
+                            <tr class="hover:bg-gray-50">
+                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                                    {{ turno.time|time:"H:i" }}
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                    {% if turno.user %}
+                                        {{ turno.user.get_full_name|default:turno.user.username }}
+                                    {% else %}
+                                        <span class="text-red-500">Usuario no encontrado</span>
+                                    {% endif %}
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                    {% if turno.user and turno.user.email %}
+                                        {{ turno.user.email }}
+                                    {% else %}
+                                        No disponible
+                                    {% endif %}
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                    {% if turno.user and turno.user.profile and turno.user.profile.phone %}
+                                        {{ turno.user.profile.phone }}
+                                    {% else %}
+                                        No disponible
+                                    {% endif %}
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                    {% if turno.service and turno.service.professional and turno.service.professional.user %}
+                                        {{ turno.service.professional.user.get_full_name|default:turno.service.professional.user.username }}
+                                    {% else %}
+                                        No asignado
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        
+        <!-- Resumen final -->
+        <div class="mt-6 bg-green-50 border border-green-200 rounded-xl p-4">
+            <h3 class="text-lg font-semibold text-green-800 mb-2">Resumen del día</h3>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div class="text-center">
+                    <p class="text-2xl font-bold text-green-600">{{ total_turnos }}</p>
+                    <p class="text-sm text-green-700">Total de turnos</p>
+                </div>
+                <div class="text-center">
+                    <p class="text-2xl font-bold text-green-600">{{ servicios_con_turnos }}</p>
+                    <p class="text-sm text-green-700">Servicios con turnos</p>
+                </div>
+                <div class="text-center">
+                    <p class="text-2xl font-bold text-green-600">{{ fecha|date:"d/m/Y" }}</p>
+                    <p class="text-sm text-green-700">Fecha</p>
+                </div>
+            </div>
+        </div>
     {% else %}
-                    
-        <p>No hay turnos agendados para hoy.</p>
+        <div class="bg-white shadow rounded-xl p-8 text-center">
+            <div class="text-gray-400 mb-4">
+                <i class="fas fa-calendar-times text-6xl"></i>
+            </div>
+            <h2 class="text-xl font-semibold text-gray-700 mb-2">No hay turnos agendados</h2>
+            <p class="text-gray-500">No se encontraron turnos para el {{ fecha|date:"l d/m/Y" }}</p>
+        </div>
     {% endif %}
 </div>
+
+<!-- Estilos para impresión -->
+<style>
+    @media print {
+        .container { max-width: none; }
+        .bg-white { background: white !important; }
+        .shadow { box-shadow: none !important; }
+        .rounded-xl { border-radius: 0 !important; }
+        .hover\:bg-gray-50:hover { background: white !important; }
+        .hover\:bg-green-700:hover { background: #059669 !important; }
+        .hover\:bg-blue-700:hover { background: #1d4ed8 !important; }
+        .hover\:bg-purple-700:hover { background: #7c3aed !important; }
+    }
+</style>
 {% endblock %}

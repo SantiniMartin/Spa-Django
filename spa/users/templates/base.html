@@ -10,6 +10,10 @@
       rel="stylesheet"
       href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"
     />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
   </head>
 
   <body class="bg-gray-100 min-h-screen flex flex-col">
@@ -45,13 +49,18 @@
             class="text-green-600 hover:underline mr-4"
             >Mis turnos</a
           >
-          {% endif %} {% if user.groups.all.0.name == "Admin" %}
+          {% endif %} 
+          
+          {% if user.is_superuser %}
           <a
             href="{% url 'panel_admin' %}"
             class="text-green-600 hover:underline mr-4"
-            >Mis turnos</a
-          >
-          {% endif %} {% csrf_token %}
+            >
+            <i></i>Panel Admin
+          </a>
+          {% endif %} 
+          
+          {% csrf_token %}
           <button type="submit" class="text-red-600 hover:underline">
             Cerrar sesión
           </button>
