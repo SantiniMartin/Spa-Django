@@ -1,5 +1,4 @@
 SpaDjango-env/
-requirements.txt
 *.pyc
 *.log
 *.pyo
