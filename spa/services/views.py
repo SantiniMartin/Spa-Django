@@ -1,11 +1,12 @@
 from django.shortcuts import render, get_object_or_404, redirect
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, user_passes_test
 from django.utils.timezone import now, make_aware
 from datetime import timedelta, datetime
 from django.contrib import messages
+from django.db.models import Sum
 
 from .models import Service, Schedule, Appointment
-from cart.models import CartItem, Cart
+from cart.models import CartItem, Cart, PagoItem
 
 def lista_servicios(request):
     servicios = Service.objects.all()
@@ -222,5 +223,26 @@ def modificar_cita(request, cita_id):
         'selected_service': selected_service,
         'selected_fecha': selected_fecha,
         'horas_disponibles': horas_disponibles,
+    })
+
+@user_passes_test(lambda u: u.is_superuser or u.username in ['dra_felicidad', 'martin'])
+def reporte_totales_servicio(request):
+    from django.db.models import Sum
+    from datetime import datetime
+    from cart.models import PagoItem
+    fecha_inicio = request.GET.get('fecha_inicio')
+    fecha_fin = request.GET.get('fecha_fin')
+    items = []
+    if fecha_inicio and fecha_fin:
+        fecha_inicio_dt = datetime.strptime(fecha_inicio, '%Y-%m-%d')
+        fecha_fin_dt = datetime.strptime(fecha_fin, '%Y-%m-%d')
+        items = PagoItem.objects.filter(
+            pago__fecha__date__gte=fecha_inicio_dt,
+            pago__fecha__date__lte=fecha_fin_dt
+        ).select_related('pago', 'service', 'pago__user')
+    return render(request, 'services/reporte_totales_servicio.html', {
+        'items': items,
+        'fecha_inicio': fecha_inicio,
+        'fecha_fin': fecha_fin,
     })
 

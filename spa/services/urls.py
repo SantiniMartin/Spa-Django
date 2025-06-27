@@ -9,4 +9,5 @@ urlpatterns = [
     path('mis-citas/', views.mis_citas, name='mis_citas'),
     path('cancelar-cita/<int:cita_id>/', views.cancelar_cita, name='cancelar_cita'),
     path('modificar-cita/<int:cita_id>/', views.modificar_cita, name='modificar_cita'),
+    path('reporte-totales-servicio/', views.reporte_totales_servicio, name='reporte_totales_servicio'),
 ]

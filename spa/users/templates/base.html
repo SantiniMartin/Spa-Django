@@ -51,12 +51,12 @@
           >
           {% endif %} 
           
-          {% if user.is_superuser %}
+          {% if user.is_superuser or user.username == 'dra_felicidad' or user.username == 'martin' %}
           <a
-            href="{% url 'panel_admin' %}"
+            href="{% url 'reporte_totales_servicio' %}"
             class="text-green-600 hover:underline mr-4"
             >
-            <i></i>Panel Admin
+            Reporte Totales Servicios
           </a>
           {% endif %} 
           

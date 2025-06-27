@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from .models import CartItem
+from .models import CartItem, Pago, PagoItem
 from services.models import Service
 from django.contrib.auth.decorators import login_required
 from django.utils.timezone import now, make_aware
@@ -102,14 +102,38 @@ def confirmar_compra(request):
         descuento = round(carrito.total_price() * Decimal('0.15'), 2)
         total_con_descuento = round(carrito.total_price() - descuento, 2)
 
-    # Preparar datos para el email
+    # Preparar datos para el email y para el registro de pago
     servicios = []
     for item in carrito.items.all():
+        # Buscar la cita exacta para este usuario, servicio, fecha y hora
+        cita = None
+        citas = item.service.appointment_set.filter(user=request.user, service=item.service).order_by('-date', '-time')
+        if citas.exists():
+            cita = citas.first()
         servicios.append({
             'nombre': item.service.name,
             'cantidad': item.cantidad,
             'subtotal': item.total_price(),
+            'service_obj': item.service,
+            'fecha_cita': cita.date if cita else None,
+            'hora_cita': cita.time if cita else None,
         })
+
+    # --- Guardar el pago y sus items ---
+    pago = Pago.objects.create(
+        user=request.user,
+        total=total_con_descuento if aplica_descuento else carrito.total_price(),
+        metodo_pago=metodo_pago or ''
+    )
+    for s in servicios:
+        PagoItem.objects.create(
+            pago=pago,
+            service=s['service_obj'],
+            cantidad=s['cantidad'],
+            subtotal=s['subtotal'],
+            fecha_cita=s['fecha_cita'],
+            hora_cita=s['hora_cita']
+        )
 
     context = {
         'usuario': request.user,

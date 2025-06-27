@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% block title %}Reporte de Totales por Servicio{% endblock %}
+{% block content %}
+<div class="container mx-auto px-4 py-8 max-w-2xl">
+  <h1 class="text-2xl font-bold mb-6 text-green-700">Totales pagados por servicio</h1>
+  <form method="get" class="flex flex-wrap gap-4 items-end mb-6">
+    <div>
+      <label class="block font-semibold mb-1">Desde</label>
+      <input type="date" name="fecha_inicio" value="{{ fecha_inicio }}" class="border rounded px-3 py-2">
+    </div>
+    <div>
+      <label class="block font-semibold mb-1">Hasta</label>
+      <input type="date" name="fecha_fin" value="{{ fecha_fin }}" class="border rounded px-3 py-2">
+    </div>
+    <button type="submit" class="px-6 py-2 bg-green-600 text-white rounded-lg font-semibold hover:bg-green-700 transition">Ver reporte</button>
+  </form>
+  {% if items %}
+  <table class="w-full bg-white rounded-xl shadow text-left">
+    <thead>
+      <tr class="bg-green-100">
+        <th class="py-2 px-4">Servicio</th>
+        <th class="py-2 px-4">Usuario</th>
+        <th class="py-2 px-4">Fecha de pago</th>
+        <th class="py-2 px-4">Fecha de cita</th>
+        <th class="py-2 px-4">Horario</th>
+        <th class="py-2 px-4">Total pagado</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for item in items %}
+      <tr class="border-b">
+        <td class="py-2 px-4">{{ item.service.name }}</td>
+        <td class="py-2 px-4">{{ item.pago.user.username }}</td>
+        <td class="py-2 px-4">{{ item.pago.fecha|date:'d/m/Y H:i' }}</td>
+        <td class="py-2 px-4">{{ item.fecha_cita|date:'d/m/Y' }}</td>
+        <td class="py-2 px-4">{{ item.hora_cita|time:'H:i' }}</td>
+        <td class="py-2 px-4 font-bold">${{ item.subtotal }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% elif fecha_inicio and fecha_fin %}
+    <p class="mt-6 text-gray-600">No hay pagos registrados en este período.</p>
+  {% endif %}
+</div>
+{% endblock %} 
