@@ -14,6 +14,16 @@
     <p class="text-center text-gray-600 mb-6">
       Seleccione la fecha y el horario que más le convenga.
     </p>
+    
+    <!-- Mensaje informativo sobre restricción de 48 horas -->
+    <div class="bg-blue-50 border border-blue-200 rounded-xl p-4 mb-6">
+      <div class="flex items-center">
+        <span class="text-blue-600 mr-2 font-bold">i</span>
+        <p class="text-blue-800 text-sm">
+          <strong>Importante:</strong> Las reservas deben realizarse con al menos 48 horas de anticipación.
+        </p>
+      </div>
+    </div>
 
     <h2 class="text-xl font-semibold mb-2">Servicio seleccionado</h2>
     <div class="border border-green-500 rounded-xl p-4 mb-6">
@@ -47,6 +57,16 @@
       <label class="block font-semibold text-gray-700 mb-2"
         >Seleccione un horario</label
       >
+      
+      {% if mensaje_error %}
+      <div class="bg-red-50 border border-red-200 rounded-xl p-4 mb-6">
+        <div class="flex items-center">
+          <span class="text-red-600 mr-2 font-bold">!</span>
+          <p class="text-red-800 text-sm">{{ mensaje_error }}</p>
+        </div>
+      </div>
+      {% endif %}
+      
       <div class="grid grid-cols-3 sm:grid-cols-4 gap-3 mb-6">
         {% for hora in horas_disponibles %}
         <label class="text-center">

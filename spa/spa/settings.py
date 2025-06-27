@@ -85,4 +85,7 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+# --- Configuración de email para desarrollo (simulado, no real) ---
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
 

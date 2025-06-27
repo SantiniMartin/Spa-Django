@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Comprobante de Pago - Spa</title>
+  <style>
+    body { font-family: Arial, sans-serif; background: #f7fafc; color: #222; margin: 0; padding: 0; }
+    .container { background: #fff; max-width: 500px; margin: 40px auto; border-radius: 12px; box-shadow: 0 2px 8px #e2e8f0; padding: 32px 24px; }
+    .header { text-align: center; margin-bottom: 24px; }
+    .header h1 { color: #16a34a; margin-bottom: 8px; }
+    .header p { color: #555; margin: 0; }
+    .resumen { margin: 24px 0; }
+    .resumen table { width: 100%; border-collapse: collapse; }
+    .resumen th, .resumen td { padding: 8px 0; text-align: left; border-bottom: 1px solid #e5e7eb; }
+    .resumen th { color: #16a34a; font-weight: bold; }
+    .total, .descuento { font-size: 1.1em; font-weight: bold; }
+    .total { color: #16a34a; }
+    .descuento { color: #2563eb; }
+    .footer { margin-top: 32px; text-align: center; color: #888; font-size: 0.95em; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>¡Gracias por tu compra, {{ usuario.first_name|default:usuario.username }}!</h1>
+      <p>Este es tu comprobante de pago.<br>Conserva este email para tu control.</p>
+    </div>
+    <div class="resumen">
+      <h2 style="color:#2563eb; font-size:1.1em; margin-bottom:10px;">Resumen de servicios</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Servicio</th>
+            <th>Cantidad</th>
+            <th style="text-align:right;">Subtotal</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for s in servicios %}
+          <tr>
+            <td>{{ s.nombre }}</td>
+            <td>{{ s.cantidad }}</td>
+            <td style="text-align:right;">${{ s.subtotal }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+      {% if aplica_descuento %}
+      <p class="descuento" style="margin:18px 0 0 0;">Descuento aplicado: - ${{ descuento }}</p>
+      {% endif %}
+      <p class="total" style="margin:8px 0 0 0;">Total pagado: ${{ total_pagado }}</p>
+      <p style="margin:8px 0 0 0; color:#555;">Método de pago: <strong>{{ metodo_pago|title }}</strong></p>
+    </div>
+    <div class="footer">
+      <p>Ante cualquier consulta, responde este email o contáctanos.<br>¡Te esperamos en Spa!</p>
+      <p style="margin-top:10px; font-size:0.9em;">&copy; {{ now|date:'Y' }} Spa. Todos los derechos reservados.</p>
+    </div>
+  </div>
+</body>
+</html> 

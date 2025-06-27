@@ -7,5 +7,10 @@ class EnsureCartMiddleware:
 
     def __call__(self, request):
         if request.user.is_authenticated:
-            Cart.objects.get_or_create(user=request.user)
+            try:
+                cart, created = Cart.objects.get_or_create(user=request.user)
+                if created:
+                    print(f"Carrito creado para usuario: {request.user.username}")
+            except Exception as e:
+                print(f"Error creando carrito para usuario {request.user.username}: {e}")
         return self.get_response(request)

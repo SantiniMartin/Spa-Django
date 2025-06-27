@@ -2,6 +2,12 @@ from django.shortcuts import render, redirect, get_object_or_404
 from .models import CartItem
 from services.models import Service
 from django.contrib.auth.decorators import login_required
+from django.utils.timezone import now, make_aware
+from datetime import datetime, timedelta
+from decimal import Decimal
+from django.core.mail import EmailMessage
+from django.template.loader import render_to_string
+from django.contrib import messages
 
 @login_required
 def agregar_servicio(request, servicio_id):
@@ -36,12 +42,88 @@ def eliminar_item(request, item_id):
 
 @login_required
 def checkout(request):
-    return render(request, 'cart/checkout.html', {'carrito': request.user.cart})
+    carrito = request.user.cart
+    descuento = 0
+    total_con_descuento = carrito.total_price()
+    metodo_pago = request.POST.get('metodo_pago') if request.method == 'POST' else None
+    aplica_descuento = False
+
+    # Verificar si todos los servicios del carrito están a más de 48 hs
+    servicios_a_mas_de_48hs = True
+    ahora = now()
+    for item in carrito.items.all():
+        # Buscar la próxima cita de ese servicio para el usuario
+        proxima_cita = item.service.appointment_set.filter(user=request.user).order_by('date', 'time').first()
+        if proxima_cita:
+            fecha_hora_servicio = make_aware(datetime.combine(proxima_cita.date, proxima_cita.time))
+            if fecha_hora_servicio - ahora < timedelta(hours=48):
+                servicios_a_mas_de_48hs = False
+                break
+
+    if metodo_pago == 'debito' and servicios_a_mas_de_48hs:
+        aplica_descuento = True
+        descuento = round(carrito.total_price() * Decimal('0.15'), 2)
+        total_con_descuento = round(carrito.total_price() - descuento, 2)
+
+    return render(request, 'cart/checkout.html', {
+        'carrito': carrito,
+        'descuento': descuento,
+        'total_con_descuento': total_con_descuento,
+        'aplica_descuento': aplica_descuento,
+        'metodo_pago': metodo_pago,
+    })
 
 @login_required
 def confirmar_compra(request):
-    request.user.cart.items.all().delete()
-    return redirect('confirmacion')
+    carrito = request.user.cart
+    metodo_pago = request.POST.get('metodo_pago')
+    descuento = 0
+    total_con_descuento = carrito.total_price()
+    aplica_descuento = False
+
+    # Verificar si todos los servicios del carrito están a más de 48 hs
+    servicios_a_mas_de_48hs = True
+    ahora = now()
+    for item in carrito.items.all():
+        proxima_cita = item.service.appointment_set.filter(user=request.user).order_by('date', 'time').first()
+        if proxima_cita:
+            fecha_hora_servicio = make_aware(datetime.combine(proxima_cita.date, proxima_cita.time))
+            if fecha_hora_servicio - ahora < timedelta(hours=48):
+                servicios_a_mas_de_48hs = False
+                break
+
+    if metodo_pago == 'debito' and servicios_a_mas_de_48hs:
+        aplica_descuento = True
+        descuento = round(carrito.total_price() * Decimal('0.15'), 2)
+        total_con_descuento = round(carrito.total_price() - descuento, 2)
+
+    # Preparar datos para el email
+    servicios = []
+    for item in carrito.items.all():
+        servicios.append({
+            'nombre': item.service.name,
+            'cantidad': item.cantidad,
+            'subtotal': item.total_price(),
+        })
+
+    context = {
+        'usuario': request.user,
+        'servicios': servicios,
+        'aplica_descuento': aplica_descuento,
+        'descuento': descuento,
+        'total_pagado': total_con_descuento if aplica_descuento else carrito.total_price(),
+        'metodo_pago': metodo_pago,
+    }
+    html_content = render_to_string('cart/comprobante_pago_email.html', context)
+    subject = 'Comprobante de pago - Spa'
+    to_email = [request.user.email]
+    email = EmailMessage(subject, html_content, to=to_email)
+    email.content_subtype = 'html'
+    email.send()
+    messages.success(request, "Correo enviado correctamente")
+    # Limpiar el carrito
+    carrito.items.all().delete()
+    return render(request, 'cart/confirmacion.html', context)
 
 @login_required
 def confirmacion(request):

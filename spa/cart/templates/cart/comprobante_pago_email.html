@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Comprobante de Pago - Spa</title>
+  <style>
+    body { font-family: Arial, sans-serif; background: #f7fafc; color: #222; margin: 0; padding: 0; }
+    .container { background: #fff; max-width: 540px; margin: 40px auto; border-radius: 14px; box-shadow: 0 2px 12px #e2e8f0; padding: 36px 28px; }
+    .header { text-align: center; margin-bottom: 28px; }
+    .logo { font-size: 2.2em; font-weight: bold; color: #16a34a; letter-spacing: 2px; margin-bottom: 6px; }
+    .header h1 { color: #2563eb; margin-bottom: 10px; font-size: 1.5em; }
+    .header p { color: #555; margin: 0; font-size: 1.1em; }
+    .resumen { margin: 28px 0; }
+    .resumen table { width: 100%; border-collapse: collapse; }
+    .resumen th, .resumen td { padding: 8px 0; text-align: left; border-bottom: 1px solid #e5e7eb; }
+    .resumen th { color: #16a34a; font-weight: bold; }
+    .total, .descuento { font-size: 1.1em; font-weight: bold; }
+    .total { color: #16a34a; }
+    .descuento { color: #2563eb; }
+    .footer { margin-top: 36px; text-align: center; color: #888; font-size: 1em; }
+    .contacto { margin-top: 18px; color: #2563eb; font-size: 1.05em; }
+    .instrucciones { background: #f0fdf4; color: #166534; border-left: 4px solid #16a34a; padding: 12px 18px; border-radius: 8px; margin: 24px 0 0 0; font-size: 1.05em; }
+    .redes { margin-top: 10px; }
+    .redes a { color: #16a34a; text-decoration: none; margin: 0 6px; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <div class="logo">Spa Bienestar</div>
+      <h1>Comprobante de Pago</h1>
+      <p>¡Hola {{ usuario.first_name|default:usuario.username }}!<br>
+      Gracias por confiar en nosotros. Tu compra ha sido procesada con éxito.<br>
+      A continuación encontrarás el detalle de tu pago y tus servicios reservados.</p>
+    </div>
+    <div class="resumen">
+      <h2 style="color:#2563eb; font-size:1.1em; margin-bottom:10px;">Resumen de servicios</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Servicio</th>
+            <th>Cantidad</th>
+            <th style="text-align:right;">Subtotal</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for s in servicios %}
+          <tr>
+            <td>{{ s.nombre }}</td>
+            <td>{{ s.cantidad }}</td>
+            <td style="text-align:right;">${{ s.subtotal }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+      {% if aplica_descuento %}
+      <p class="descuento" style="margin:18px 0 0 0;">Descuento aplicado: - ${{ descuento }}</p>
+      {% endif %}
+      <p class="total" style="margin:8px 0 0 0;">Total pagado: ${{ total_pagado }}</p>
+      <p style="margin:8px 0 0 0; color:#555;">Método de pago: <strong>{{ metodo_pago|title }}</strong></p>
+    </div>
+    <div class="instrucciones">
+      <strong>Recordá:</strong> Presentate 10 minutos antes de tu turno. Si tienes dudas o necesitas reprogramar, contáctanos.
+    </div>
+    <div class="contacto">
+      <div><strong>Contacto:</strong> +54 9 11 1234-5678 &nbsp;|&nbsp; info@spabienestar.com</div>
+      <div class="redes">
+        Síguenos en:
+        <a href="https://www.instagram.com/" target="_blank">Instagram</a> |
+        <a href="https://www.facebook.com/" target="_blank">Facebook</a>
+      </div>
+    </div>
+    <div class="footer">
+      <p>¡Te esperamos para que vivas una experiencia única de relajación y bienestar!</p>
+      <p style="margin-top:10px; font-size:0.9em;">&copy; {{ now|date:'Y' }} Spa Bienestar. Todos los derechos reservados.</p>
+    </div>
+  </div>
+</body>
+</html> 
