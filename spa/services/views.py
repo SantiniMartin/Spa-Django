@@ -12,7 +12,6 @@ def lista_servicios(request):
     servicios = Service.objects.all()
     return render(request, 'services/lista_servicios.html', {'servicios': servicios})
 
-#@login_required
 def detalle_servicio(request, service_id):
     servicio = get_object_or_404(Service, id=service_id)
     fecha_min = now().date() + timedelta(days=1)
@@ -32,7 +31,6 @@ def detalle_servicio(request, service_id):
         # Validar que la fecha esté al menos 48 horas en el futuro
         ahora = now()
         fecha_hora_minima = ahora + timedelta(hours=48)
-        
         if fecha < fecha_hora_minima.date():
             mensaje_error = "Las reservas deben realizarse con al menos 48 horas de anticipación."
         else:
@@ -70,107 +68,78 @@ def detalle_servicio(request, service_id):
 
 @login_required
 def reservar_turno(request, service_id):
-        if not request.user.is_authenticated:
-            return redirect('login')
-        if request.method == 'POST':
+    if not request.user.is_authenticated:
+        return redirect('login')
+    if request.method == 'POST':
+        try:
+            servicio = get_object_or_404(Service, id=service_id)
+            fecha_str = request.POST.get('date')
+            hora_str = request.POST.get('time')
+            
+            if not fecha_str or not hora_str:
+                return redirect('detalle_servicio', service_id=service_id)
+            
             try:
-                print(f"DEBUG: Iniciando reserva para servicio ID: {service_id}")
-                servicio = get_object_or_404(Service, id=service_id)
-                print(f"DEBUG: Servicio encontrado: {servicio.name}")
-                
-                fecha_str = request.POST.get('date')
-                hora_str = request.POST.get('time')
-                print(f"DEBUG: Fecha recibida: {fecha_str}, Hora recibida: {hora_str}")
-
-                if not fecha_str or not hora_str:
-                    print("DEBUG: Fecha u hora faltante")
-                    return redirect('detalle_servicio', service_id=service_id)
-
-                try:
-                    fecha = datetime.strptime(fecha_str, "%Y-%m-%d").date()
-                    hora = datetime.strptime(hora_str, "%H:%M").time()
-                    print(f"DEBUG: Fecha parseada: {fecha}, Hora parseada: {hora}")
-                except (ValueError, TypeError) as e:
-                    print(f"DEBUG: Error parseando fecha/hora: {e}")
-                    return redirect('detalle_servicio', service_id=service_id)
-
-                if fecha <= now().date():
-                    print("DEBUG: Fecha en el pasado")
-                    return redirect('detalle_servicio', service_id=service_id)
-
-                # Validar que la reserva sea al menos 48 horas antes
-                ahora = now()
-                fecha_hora_servicio = make_aware(datetime.combine(fecha, hora))
-                tiempo_restante = fecha_hora_servicio - ahora
-                
-                if tiempo_restante < timedelta(hours=48):
-                    print(f"DEBUG: Reserva muy próxima. Tiempo restante: {tiempo_restante}")
-                    # Redirigir con mensaje de error
-                    return redirect('detalle_servicio', service_id=service_id)
-
-                dia_semana = fecha.weekday()
-                horarios = Schedule.objects.filter(service=servicio, day_of_week=dia_semana)
-                dentro_del_horario = any(h.start_time <= hora < h.end_time for h in horarios)
-                print(f"DEBUG: Día semana: {dia_semana}, Horarios encontrados: {horarios.count()}, Dentro del horario: {dentro_del_horario}")
-                
-                if not dentro_del_horario:
-                    print("DEBUG: Fuera del horario disponible")
-                    return redirect('detalle_servicio', service_id=service_id)
-
-                if servicio.max_people:
-                    cantidad = Appointment.objects.filter(service=servicio, date=fecha, time=hora).count()
-                    print(f"DEBUG: Servicio colectivo, reservas actuales: {cantidad}/{servicio.max_people}")
-                    if cantidad >= servicio.max_people:
-                        print("DEBUG: Servicio lleno")
-                        return redirect('detalle_servicio', service_id=service_id)
-                else:
-                    existe_reserva = Appointment.objects.filter(service=servicio, date=fecha, time=hora).exists()
-                    print(f"DEBUG: Servicio individual, reserva existente: {existe_reserva}")
-                    if existe_reserva:
-                        print("DEBUG: Ya hay una reserva para este horario")
-                        return redirect('detalle_servicio', service_id=service_id)
-
-                # Crear la cita
-                print("DEBUG: Creando cita...")
-                Appointment.objects.create(
-                    user=request.user,
-                    service=servicio,
-                    date=fecha,
-                    time=hora
-                )
-                print("DEBUG: Cita creada exitosamente")
-                
-                # Verificar y crear carrito si no existe
-                try:
-                    cart = request.user.cart
-                    print(f"DEBUG: Carrito existente encontrado: {cart.id}")
-                except Exception as e:
-                    print(f"DEBUG: Error accediendo al carrito: {e}")
-                    cart, created = Cart.objects.get_or_create(user=request.user)
-                    print(f"DEBUG: Carrito creado: {created}, ID: {cart.id}")
-                
-                # Agregar el servicio al carrito
-                print("DEBUG: Agregando servicio al carrito...")
-                item, created = CartItem.objects.get_or_create(cart=cart, service=servicio)
-                if not created:
-                    item.cantidad += 1
-                    item.save()
-                    print(f"DEBUG: Cantidad actualizada: {item.cantidad}")
-                else:
-                    print("DEBUG: Nuevo item creado en carrito")
-                
-                print("DEBUG: Redirigiendo a confirmación...")
-                return redirect('confirmacion_turno')
-                
-            except Exception as e:
-                # Log del error para debugging
-                print(f"ERROR en reservar_turno: {e}")
-                import traceback
-                traceback.print_exc()
+                fecha = datetime.strptime(fecha_str, "%Y-%m-%d").date()
+                hora = datetime.strptime(hora_str, "%H:%M").time()
+            except (ValueError, TypeError):
                 return redirect('detalle_servicio', service_id=service_id)
 
-        return redirect('lista_servicios')
+            if fecha <= now().date():
+                return redirect('detalle_servicio', service_id=service_id)
 
+            # Validar que la reserva sea al menos 48 horas antes
+            ahora = now()
+            fecha_hora_servicio = make_aware(datetime.combine(fecha, hora))
+            tiempo_restante = fecha_hora_servicio - ahora
+            
+            if tiempo_restante < timedelta(hours=48):
+                return redirect('detalle_servicio', service_id=service_id)
+
+            dia_semana = fecha.weekday()
+            horarios = Schedule.objects.filter(service=servicio, day_of_week=dia_semana)
+            dentro_del_horario = any(h.start_time <= hora < h.end_time for h in horarios)
+            
+            if not dentro_del_horario:
+                return redirect('detalle_servicio', service_id=service_id)
+
+            if servicio.max_people:
+                cantidad = Appointment.objects.filter(service=servicio, date=fecha, time=hora).count()
+                if cantidad >= servicio.max_people:
+                    return redirect('detalle_servicio', service_id=service_id)
+            else:
+                existe_reserva = Appointment.objects.filter(service=servicio, date=fecha, time=hora).exists()
+                if existe_reserva:
+                    return redirect('detalle_servicio', service_id=service_id)
+
+            # Crear la cita
+            Appointment.objects.create(
+                user=request.user,
+                service=servicio,
+                date=fecha,
+                time=hora
+            )
+            
+            # Verificar y crear carrito si no existe
+            try:
+                cart = request.user.cart
+            except Exception:
+                cart, created = Cart.objects.get_or_create(user=request.user)
+            
+            # Agregar el servicio al carrito
+            item, created = CartItem.objects.get_or_create(cart=cart, service=servicio)
+            if not created:
+                item.cantidad += 1
+            item.save()
+            
+            return redirect('confirmacion_turno')
+            
+        except Exception as e:
+            import traceback
+            traceback.print_exc()
+            return redirect('detalle_servicio', service_id=service_id)
+
+    return redirect('lista_servicios')
 
 @login_required
 def confirmacion_turno(request):
@@ -242,6 +211,28 @@ def reporte_totales_servicio(request):
         ).select_related('pago', 'service', 'pago__user')
     return render(request, 'services/reporte_totales_servicio.html', {
         'items': items,
+        'fecha_inicio': fecha_inicio,
+        'fecha_fin': fecha_fin,
+    })
+
+@user_passes_test(lambda u: u.is_superuser or u.username in ['dra_felicidad', 'martin'])
+def reporte_totales_profesional(request):
+    from django.db.models import Sum
+    from datetime import datetime
+    from cart.models import PagoItem
+    fecha_inicio = request.GET.get('fecha_inicio')
+    fecha_fin = request.GET.get('fecha_fin')
+    profesionales = []
+    if fecha_inicio and fecha_fin:
+        fecha_inicio_dt = datetime.strptime(fecha_inicio, '%Y-%m-%d')
+        fecha_fin_dt = datetime.strptime(fecha_fin, '%Y-%m-%d')
+        items = PagoItem.objects.filter(
+            pago__fecha__date__gte=fecha_inicio_dt,
+            pago__fecha__date__lte=fecha_fin_dt
+        ).select_related('service__professional')
+        profesionales = items.values('service__professional__name').annotate(total=Sum('subtotal')).order_by('-total')
+    return render(request, 'services/reporte_totales_profesional.html', {
+        'profesionales': profesionales,
         'fecha_inicio': fecha_inicio,
         'fecha_fin': fecha_fin,
     })

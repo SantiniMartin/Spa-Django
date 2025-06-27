@@ -8,6 +8,7 @@ from decimal import Decimal
 from django.core.mail import EmailMessage
 from django.template.loader import render_to_string
 from django.contrib import messages
+from services.models import Appointment
 
 @login_required
 def agregar_servicio(request, servicio_id):
@@ -48,7 +49,6 @@ def checkout(request):
     metodo_pago = request.POST.get('metodo_pago') if request.method == 'POST' else None
     aplica_descuento = False
 
-    # Verificar si todos los servicios del carrito están a más de 48 hs
     servicios_a_mas_de_48hs = True
     ahora = now()
     fechas_citas = set()
@@ -60,7 +60,6 @@ def checkout(request):
                 servicios_a_mas_de_48hs = False
             fechas_citas.add(proxima_cita.date)
 
-    # Solo permitir pago conjunto si todas las fechas son iguales
     pago_conjunto_habilitado = len(fechas_citas) == 1 and len(fechas_citas) > 0
 
     if metodo_pago == 'debito' and servicios_a_mas_de_48hs:
@@ -86,7 +85,6 @@ def confirmar_compra(request):
     total_con_descuento = carrito.total_price()
     aplica_descuento = False
 
-    # Verificar si todos los servicios del carrito están a más de 48 hs
     servicios_a_mas_de_48hs = True
     ahora = now()
     for item in carrito.items.all():
@@ -102,14 +100,9 @@ def confirmar_compra(request):
         descuento = round(carrito.total_price() * Decimal('0.15'), 2)
         total_con_descuento = round(carrito.total_price() - descuento, 2)
 
-    # Preparar datos para el email y para el registro de pago
     servicios = []
     for item in carrito.items.all():
-        # Buscar la cita exacta para este usuario, servicio, fecha y hora
-        cita = None
-        citas = item.service.appointment_set.filter(user=request.user, service=item.service).order_by('-date', '-time')
-        if citas.exists():
-            cita = citas.first()
+        cita = Appointment.objects.filter(user=request.user, service=item.service).order_by('-created_at').first()
         servicios.append({
             'nombre': item.service.name,
             'cantidad': item.cantidad,
@@ -119,7 +112,6 @@ def confirmar_compra(request):
             'hora_cita': cita.time if cita else None,
         })
 
-    # --- Guardar el pago y sus items ---
     pago = Pago.objects.create(
         user=request.user,
         total=total_con_descuento if aplica_descuento else carrito.total_price(),
@@ -150,7 +142,6 @@ def confirmar_compra(request):
     email.content_subtype = 'html'
     email.send()
     messages.success(request, "Correo enviado correctamente")
-    # Limpiar el carrito
     carrito.items.all().delete()
     return render(request, 'cart/confirmacion.html', context)
 

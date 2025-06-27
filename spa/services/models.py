@@ -33,7 +33,6 @@ class Schedule(models.Model):
     start_time = models.TimeField()
     end_time = models.TimeField()
 
-
 class Appointment(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     service = models.ForeignKey(Service, on_delete=models.CASCADE)

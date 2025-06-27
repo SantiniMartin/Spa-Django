@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% block title %}Reporte de Totales por Profesional{% endblock %}
+{% block content %}
+<div class="container mx-auto px-4 py-8 max-w-2xl">
+  <h1 class="text-2xl font-bold mb-6 text-green-700">Totales pagados por profesional</h1>
+  <form method="get" class="flex flex-wrap gap-4 items-end mb-6">
+    <div>
+      <label class="block font-semibold mb-1">Desde</label>
+      <input type="date" name="fecha_inicio" value="{{ fecha_inicio }}" class="border rounded px-3 py-2">
+    </div>
+    <div>
+      <label class="block font-semibold mb-1">Hasta</label>
+      <input type="date" name="fecha_fin" value="{{ fecha_fin }}" class="border rounded px-3 py-2">
+    </div>
+    <button type="submit" class="px-6 py-2 bg-green-600 text-white rounded-lg font-semibold hover:bg-green-700 transition">Ver reporte</button>
+  </form>
+  {% if profesionales %}
+  <table class="w-full bg-white rounded-xl shadow text-left">
+    <thead>
+      <tr class="bg-green-100">
+        <th class="py-2 px-4">Profesional</th>
+        <th class="py-2 px-4">Total pagado</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for p in profesionales %}
+      <tr class="border-b">
+        <td class="py-2 px-4">{{ p.service__professional__name }}</td>
+        <td class="py-2 px-4 font-bold">${{ p.total }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% elif fecha_inicio and fecha_fin %}
+    <p class="mt-6 text-gray-600">No hay pagos registrados en este período.</p>
+  {% endif %}
+</div>
+{% endblock %} 
