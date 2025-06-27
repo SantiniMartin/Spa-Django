@@ -1,18 +1,18 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from .models import CartItem
-from store.models import Product
+from services.models import Service
 from django.contrib.auth.decorators import login_required
 
 @login_required
-def agregar_producto(request, producto_id):
-    product = get_object_or_404(Product, id=producto_id)
+def agregar_servicio(request, servicio_id):
+    service = get_object_or_404(Service, id=servicio_id)
     cart = request.user.cart
-    item, created = CartItem.objects.get_or_create(cart=cart, product=product)
+    item, created = CartItem.objects.get_or_create(cart=cart, service=service)
     if not created:
         item.cantidad += 1
         item.save()
     return redirect('ver_carrito')
-##
+
 @login_required
 def ver_carrito(request):
     return render(request, 'cart/ver_carrito.html', {'carrito': request.user.cart})

@@ -1,11 +1,11 @@
 <!-- prettier-ignore -->
 {% extends "base.html" %}
 
-{% block title %}Mi Carrito{% endblock %}
+{% block title %}Mi Carrito de Servicios{% endblock %}
 
 {% block content %}
 <div class="container mx-auto px-4 py-6">
-  <h1 class="text-2xl font-bold mb-4">Mi Carrito</h1>
+  <h1 class="text-2xl font-bold mb-4">Mi Carrito de Servicios</h1>
   {% if carrito.items.all %}
   <div class="space-y-4">
     {% for item in carrito.items.all %}
@@ -13,9 +13,13 @@
       class="bg-white rounded-2xl shadow p-4 flex justify-between items-center"
     >
       <div>
-        <h2 class="text-lg font-semibold">{{ item.producto.name }}</h2>
+        <h2 class="text-lg font-semibold">{{ item.service.name }}</h2>
+        <p class="text-gray-600">{{ item.service.description|truncatewords:20 }}</p>
         <p class="text-gray-600">
-          Precio unitario: ${{ item.producto.precio }}
+          Duración: {{ item.service.duration_minutes }} minutos
+        </p>
+        <p class="text-gray-600">
+          Precio unitario: ${{ item.service.rice }}
         </p>
         <form
           action="{% url 'modificar_cantidad' item.id %}"
@@ -59,7 +63,7 @@
     >
   </div>
   {% else %}
-  <p>Tu carrito está vacío.</p>
+  <p>Tu carrito de servicios está vacío.</p>
   {% endif %}
 </div>
 {% endblock %}

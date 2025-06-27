@@ -4,6 +4,7 @@ from django.utils.timezone import now
 from datetime import timedelta, datetime
 
 from .models import Service, Schedule, Appointment
+from cart.models import CartItem
 
 def lista_servicios(request):
     servicios = Service.objects.all()
@@ -83,12 +84,21 @@ def reservar_turno(request, service_id):
                 if Appointment.objects.filter(service=servicio, date=fecha, time=hora).exists():
                     return redirect('detalle_servicio', service_id=service_id)
 
+            # Crear la cita
             Appointment.objects.create(
                 user=request.user,
                 service=servicio,
                 date=fecha,
                 time=hora
             )
+            
+            # Agregar el servicio al carrito
+            cart = request.user.cart
+            item, created = CartItem.objects.get_or_create(cart=cart, service=servicio)
+            if not created:
+                item.cantidad += 1
+                item.save()
+            
             return redirect('confirmacion_turno')
 
         return redirect('lista_servicios')

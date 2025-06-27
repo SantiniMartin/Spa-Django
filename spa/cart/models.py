@@ -1,6 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
-from store.models import Product
+from services.models import Service
 
 class Cart(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
@@ -11,8 +11,9 @@ class Cart(models.Model):
 
 class CartItem(models.Model):
     cart = models.ForeignKey(Cart, on_delete=models.CASCADE, related_name='items')
-    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    service = models.ForeignKey(Service, on_delete=models.CASCADE)
+    fecha_reserva = models.DateField()
     cantidad = models.PositiveIntegerField(default=1)
 
     def total_price(self):
-        return self.cantidad * self.product.price
+        return self.cantidad * self.service.rice

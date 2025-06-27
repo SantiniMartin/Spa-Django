@@ -4,8 +4,12 @@
 {% block content %}
 <div class="container mx-auto px-4 py-12 text-center">
     <h1 class="text-3xl font-bold text-green-600 mb-4">¡Turno reservado exitosamente!</h1>
-    <p class="text-lg text-gray-700">Recibirás la confirmación en tu panel de usuario.</p>
-    <a href="{% url 'lista_servicios' %}" class="text-green-600 hover:underline mr-4">Volver a servicios</a>
-    <a href="{% url 'mis_citas' %}" class="text-green-600 hover:underline mr-4">Ver mis citas</a>
+    <p class="text-lg text-gray-700 mb-4">Recibirás la confirmación en tu panel de usuario.</p>
+    <p class="text-lg text-blue-600 mb-6">El servicio también se ha agregado a tu carrito.</p>
+    <div class="space-x-4">
+        <a href="{% url 'lista_servicios' %}" class="text-green-600 hover:underline">Volver a servicios</a>
+        <a href="{% url 'mis_citas' %}" class="text-green-600 hover:underline">Ver mis citas</a>
+        <a href="{% url 'ver_carrito' %}" class="text-blue-600 hover:underline">Ver mi carrito</a>
+    </div>
 </div>
 {% endblock %}
