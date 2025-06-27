@@ -12,7 +12,6 @@ class Cart(models.Model):
 class CartItem(models.Model):
     cart = models.ForeignKey(Cart, on_delete=models.CASCADE, related_name='items')
     service = models.ForeignKey(Service, on_delete=models.CASCADE)
-    fecha_reserva = models.DateField()
     cantidad = models.PositiveIntegerField(default=1)
 
     def total_price(self):
